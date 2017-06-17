@@ -72,7 +72,7 @@ def visualize_test_images(x, is_single=False):
         plt.figure(figsize=(2, 2))
         plt.imshow(x)
     else:
-        fig, axes = plt.subplots(1, 5, figsize=(15, 15))
+        fig, axes = plt.subplots(1, len(x), figsize=(15, 15))
         for index, image in enumerate(x):
             image = image.squeeze()
             axes[index].imshow(image)
