@@ -3,4 +3,8 @@ data
 *.h5
 models
 *.swp
-*.p
+.idea
+__pycache__
+augmentation-results
+test-data-old
+*.zip
