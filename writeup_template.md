@@ -3,7 +3,7 @@
 
  
 
-**Build a Traffic Sign Recognition Project**
+**Build a Traffic Sign Recognition Project:**
 
 The goals / steps of this project are the following: \* Load the German Traffic
 Signs pre-labelled dataset \* Explore, summarize and visualize the data set \*
@@ -13,7 +13,7 @@ probabilities of the new images
 
  
 
-### Data Set Summary & Exploration:
+### **Data Set Summary & Exploration:**
 
 First we will explore together the dataset of traffic signs. We will see what is
 a shape of an image, how many training, validation and testing examples are
@@ -64,7 +64,7 @@ def train_test_examples(x_train, x_validation, x_test):
 
  
 
-#### 2. Include an exploratory visualization of the dataset:
+#### **2. Include an exploratory visualization of the dataset:**
 
 Now we will visualize the dataset, what are the features available and how the
 labels are distributed in the dataset.
@@ -172,11 +172,15 @@ def histogram_data(x, n_samples, n_classes):
     plt.show()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#### Labels distribution in Train Dataset:
+ 
+
+#### **Labels distribution in Train Dataset:**
 
 ![png](documentation/output_15_0.png)
 
-#### Labels distribution in Augmented Dataset:
+ 
+
+#### **Labels distribution in Augmented Dataset:**
 
 As we discussed, the dataset contains very few samples for some the classes.
 Obviously, we need to fix it.
@@ -186,13 +190,15 @@ for now let's enjoy the histogram after the data augmentation.
 
 ![png](documentation/output_17_1.png)
 
-#### Labels distribution in Test Dataset:
+ 
+
+#### **Labels distribution in Test Dataset:**
 
 ![png](documentation/output_19_1.png)
 
-### Pre-process the Data Set:
-
  
+
+### **Pre-process the Data Set:**
 
 Preprocessing is an important step before training neural network. It consists
 of:
@@ -250,7 +256,7 @@ def pre_process(features, labels, is_train=False):
 
  
 
-### Image Transformations and Rotations:
+### **Image Transformations and Rotations:**
 
  
 
@@ -347,7 +353,11 @@ def augment_dataset(features, labels, n_classes):
     return augmented_features, augmented_labels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+ 
+
 #### Visualize how the transformation is performed.
+
+ 
 
 ![png](documentation/output_31_0.png)
 
@@ -357,7 +367,7 @@ def augment_dataset(features, labels, n_classes):
 
  
 
-### Design and Test a Model Architecture
+### **Design and Test a Model Architecture**
 
  
 
@@ -365,21 +375,21 @@ The model consists of the following layers:
 
  
 
-| Layer       | Description     | Filter Weight | Filter Bias | Stride | Padding | Dropout | Dimension           | Parameter |
-|-------------|-----------------|---------------|-------------|--------|---------|---------|---------------------|-----------|
-| **Layer 1** | Convolutional   | 5x5x6         | 6           | 2x2    | Valid   | 0.9     | Input 32x32x3       | 156       |
-|             |                 |               |             |        |         |         | ReLU 28x28x6        |           |
-|             |                 |               |             |        |         |         | Max Pooling 14x14x6 |           |
-| **Layer 2** | Convolutional   | 5x5x16        | 16          | 2x2    | Valid   | 0.9     | Input 14x14x6       | 2416      |
-|             |                 |               |             |        |         |         | ReLU 10x10x16       |           |
-|             |                 |               |             |        |         |         | Max Pooling 5x5x16  |           |
-| **Flatten** |                 |               |             |        |         |         | 400                 |           |
-| **Layer 3** | Fully Connected | 400x120       | 120         |        |         | 0.6     | Input 400           | 48120     |
-|             |                 |               |             |        |         |         | ReLU 120            |           |
-| **Layer 4** | Fully Connected | 120x84        | 84          |        |         | 0.5     | Input 120           | 10164     |
-|             |                 |               |             |        |         |         | ReLU 84             |           |
-| **Layer 5** | Output          | 84x43         | 43          |        |         |         | Input 84            | 3655      |
-|             |                 |               |             |        |         |         | Logits 84           |           |
+| Layer       | Description     | Filter Weight | Filter Bias | Stride | Padding | Dropout | Dimension            | Parameter |
+|-------------|-----------------|---------------|-------------|--------|---------|---------|----------------------|-----------|
+| **Layer 1** | Convolutional   | 5x5x6         | 6           | 2x2    | Valid   | 0.9     | Input: 32x32x3       | 156       |
+|             |                 |               |             |        |         |         | ReLU: 28x28x6        |           |
+|             |                 |               |             |        |         |         | Max Pooling: 14x14x6 |           |
+| **Layer 2** | Convolutional   | 5x5x16        | 16          | 2x2    | Valid   | 0.9     | Input: 14x14x6       | 2416      |
+|             |                 |               |             |        |         |         | ReLU: 10x10x16       |           |
+|             |                 |               |             |        |         |         | Max Pooling: 5x5x16  |           |
+| **Flatten** |                 |               |             |        |         |         | 400                  |           |
+| **Layer 3** | Fully Connected | 400x120       | 120         |        |         | 0.6     | Input: 400           | 48120     |
+|             |                 |               |             |        |         |         | ReLU: 120            |           |
+| **Layer 4** | Fully Connected | 120x84        | 84          |        |         | 0.5     | Input: 120           | 10164     |
+|             |                 |               |             |        |         |         | ReLU: 84             |           |
+| **Layer 5** | Output          | 84x43         | 43          |        |         |         | Input: 84            | 3655      |
+|             |                 |               |             |        |         |         | Logits: 84           |           |
 
  
 
@@ -549,9 +559,7 @@ The network is able to achieve 95.306% accuracy on the test data:
 |---------------|---------|
 
 
- 
-
-### Test a Model on New Images
+### **Test a Model on New Images**
 
  
 
@@ -570,286 +578,206 @@ visualize_test_images(x_test_new)
 
  
 
-~   png
+ 
 
-![png](documentation/output_65_1.png)
+ 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-No Vehicle
- 
-Network Predictions:
-No vehicles:  100.000%
-Speed limit (70km/h):  0.000%
-Speed limit (50km/h):  0.000%
-Speed limit (120km/h):  0.000%
-Speed limit (80km/h):  0.000%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Predictions on New Test Data:**
 
-![png](documentation/output_65_3.png)
+![](documentation/output_65_1.png)
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Dangerous curve left
+| **Predictions**       | **Confidence (%)** |
+|-----------------------|--------------------|
+| Roundabout mandatory  | 100.000            |
+| Speed limit (70km/h)  | 0.000              |
+| Speed limit (50km/h)  | 0.000              |
+| Speed limit (120km/h) | 0.000              |
+| Speed limit (80km/h)  | 0.000              |
+| **Ground Truth**      | **No Vehicle**     |
 
-Network Predictions:
-Dangerous curve to the left:  100.000%
-Slippery road:  0.000%
-Right-of-way at the next intersection:  0.000%
-Double curve:  0.000%
-Road work:  0.000%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+![](documentation/output_65_3.png)
 
-![png](documentation/output_65_5.png)
+| **Predictions**                       | **Confidence (%)**       |
+|---------------------------------------|--------------------------|
+| Dangerous curve to the left           | 100.000                  |
+| Slippery road                         | 0.000                    |
+| Right-of-way at the next intersection | 0.000                    |
+| Double curve                          | 0.000                    |
+| Road work                             | 0.000                    |
+| **Ground Truth**                      | **Dangerous curve left** |
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Bicycle crossing
+![](documentation/output_65_5.png)
 
-Network Predictions:
-Road narrows on the right:  42.401%
-Pedestrians:  37.532%
-General caution:  19.522%
-Traffic signals:  0.370%
-Right-of-way at the next intersection:  0.150%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| **Predictions**                       | **Confidence (%)**   |
+|---------------------------------------|----------------------|
+| Road narrows on the right             | 42.401               |
+| Pedestrians                           | 37.532               |
+| General caution                       | 19.522               |
+| Traffic signals                       | 0.370                |
+| Right-of-way at the next intersection | 0.150                |
+| **Ground Truth**                      | **Bicycle crossing** |
 
-![png](documentation/output_65_7.png)
+![](documentation/output_65_7.png)
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Roundabout mandatory
+| **Predictions**                                    | **Confidence (%)**       |
+|----------------------------------------------------|--------------------------|
+| Roundabout mandatory                               | 84.611                   |
+| Priority road                                      | 8.660                    |
+| End of no passing by vehicles over 3.5 metric tons | 3.120                    |
+| End of no passing by vehicles over 3.5 metric ton  | 2.012                    |
+| Speed limit (100km/h)                              | 0.713                    |
+| **Ground Truth**                                   | **Roundabout mandatory** |
 
-Network Predictions:
-Roundabout mandatory:  84.611%
-Priority road:  8.660%
-End of no passing by vehicles over 3.5 metric tons:  3.120%
-Right-of-way at the next intersection:  2.012%
-Speed limit (100km/h):  0.713%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+![](documentation/output_65_9.png)
 
-![png](documentation/output_65_9.png)
+| **Predictions**      | **Confidence (%)** |
+|----------------------|--------------------|
+| Ahead only           | 100.000            |
+| No passing           | 0.000              |
+| Bicycles crossing    | 0.000              |
+| Turn left ahead      | 0.000              |
+| Speed limit (60km/h) | 0.000              |
+| **Ground Truth**     | **Ahead Only**     |
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Ahead Only
+![](documentation/output_65_11.png)
 
-Network Predictions:
-Ahead only:  100.000%
-No passing:  0.000%
-Bicycles crossing:  0.000%
-Turn left ahead:  0.000%
-Speed limit (60km/h):  0.000%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-![png](documentation/output_65_11.png)
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Traffic Signals
-
-Network Predictions:
-Road narrows on the right:  98.333%
-Pedestrians:  0.889%
-Road work:  0.563%
-Children crossing:  0.071%
-General caution:  0.052%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| **Predictions**           | **Confidence (%)**  |
+|---------------------------|---------------------|
+| Road narrows on the right | 98.333%             |
+| Pedestrians               | 0.889               |
+| Road work                 | 0.563               |
+| Children crossing         | 0.071               |
+| General caution           | 0.052               |
+| **Ground Truth**          | **Traffic Signals** |
 
 ![](documentation/output_65_13.png)
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Traffic Signals
+| **Predictions**                       | **Confidence (%)**  |
+|---------------------------------------|---------------------|
+| Beware of ice/snow                    | 56.233              |
+| Right-of-way at the next intersection | 27.989              |
+| Double curve                          | 7.642               |
+| Traffic signals                       | 2.601               |
+| Children crossing                     | 1.434               |
+| **Ground Truth**                      | **Traffic Signals** |
 
-Network Predictions:
-Beware of ice/snow:  56.233%
-Right-of-way at the next intersection:  27.989%
-Double curve:  7.642%
-Traffic signals:  2.601%
-Children crossing:  1.434%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+![](documentation/output_65_15.png)
 
-![png](documentation/output_65_15.png)
+| **Predictions**  | **Confidence (%)**       |
+|------------------|--------------------------|
+| Yield            | 71.145                   |
+| No vehicles      | 9.539                    |
+| Stop             | 6.892                    |
+| Priority road    | 3.922                    |
+| Road work        | 1.760                    |
+| **Ground Truth** | **Roundabout mandatory** |
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Roundabout mandatory
+![](documentation/output_65_17.png)
 
-Network Predictions:
-Yield:  71.145%
-No vehicles:  9.539%
-Stop:  6.892%
-Priority road:  3.922%
-Road work:  1.760%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| **Predictions**                       | **Confidence (%)**  |
+|---------------------------------------|---------------------|
+| General caution                       | 54.849              |
+| Traffic signals                       | 45.148              |
+| Pedestrians                           | 0.003               |
+| Right-of-way at the next intersection | 0.000               |
+| Road narrows on the right             | 0.000               |
+| **Ground Truth**                      | **Traffic signals** |
 
-![png](documentation/output_65_17.png)
+![](documentation/output_65_19.png)
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Traffic signals
+| **Prediction**            | **Confidence (%)**  |
+|---------------------------|---------------------|
+| Traffic signals           | 95.580              |
+| General caution           | 4.420               |
+| Road narrows on the right | 0.000               |
+| Pedestrians               | 0.000               |
+| Road work                 | 0.000               |
+| **Ground Truth**          | **Traffic signals** |
 
-Network Predictions:
-General caution:  54.849%
-Traffic signals:  45.148%
-Pedestrians:  0.003%
-Right-of-way at the next intersection:  0.000%
-Road narrows on the right:  0.000%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+![](documentation/output_65_21.png)
 
-![png](documentation/output_65_19.png)
+| **Prediction**       | **Confidence (%)** |
+|----------------------|--------------------|
+| No entry             | 99.996             |
+| Stop                 | 0.004              |
+| Turn right ahead     | 0.000              |
+| Roundabout mandatory | 0.000              |
+| Speed limit (70km/h) | 0.000              |
+| **Ground Truth**     | **Slippery road**  |
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Traffic signals
+![](documentation/output_65_23.png)
 
-Network Predictions:
-Traffic signals:  95.580%
-General caution:  4.420%
-Road narrows on the right:  0.000%
-Pedestrians:  0.000%
-Road work:  0.000%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| **Prediction**            | **Confidence (%)**  |
+|---------------------------|---------------------|
+| General caution           | 99.994              |
+| Traffic signals           | 0.006               |
+| Pedestrians               | 0.000               |
+| Bumpy road                | 0.000               |
+| Road narrows on the right | 0.000               |
+| **Ground Truth**          | **Traffic signals** |
 
-![png](documentation/output_65_21.png)
+![](documentation/output_65_25.png)
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Slippery road
-
-Network Predictions:
-No entry:  99.996%
-Stop:  0.004%
-Turn right ahead:  0.000%
-Roundabout mandatory:  0.000%
-Speed limit (70km/h):  0.000%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-![png](documentation/output_65_23.png)
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Traffic signals
-
-Network Predictions:
-General caution:  99.994%
-Traffic signals:  0.006%
-Pedestrians:  0.000%
-Bumpy road:  0.000%
-Road narrows on the right:  0.000%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-![png](documentation/output_65_25.png)
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Two Symbols
-
-Network Predictions:
-No passing:  78.461%
-Keep left:  9.933%
-Yield:  8.010%
-No passing for vehicles over 3.5 metric tons:  0.935%
-Speed limit (60km/h):  0.751%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| **Predictions**                              | **Confidence (%)** |
+|----------------------------------------------|--------------------|
+| No passing                                   | 78.461             |
+| Keep left                                    | 9.933              |
+| Yield                                        | 8.010              |
+| No passing for vehicles over 3.5 metric tons | 0.935              |
+| Speed limit (60km/h)                         | 0.751              |
+| **Ground Truth**                             | **Two Symbols**    |
 
 ![png](documentation/output_65_27.png)
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Priority road
+ 
 
-Network Predictions:
-Priority road:  100.000%
-Roundabout mandatory:  0.000%
-Right-of-way at the next intersection:  0.000%
-Yield:  0.000%
-No passing:  0.000%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| **Predictions**                       | **Confidence (%)** |
+|---------------------------------------|--------------------|
+| Priority road                         | 100.000            |
+| Roundabout mandatory                  | 0.000              |
+| Right-of-way at the next intersection | 0.000              |
+| Yield                                 | 0.000              |
+| No passing                            | 0.000              |
+| **Ground Truth**                      | **Priority road**  |
 
 ![png](documentation/output_65_29.png)
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Go straight or right
-
-Network Predictions:
-Turn right ahead:  99.983%
-Stop:  0.017%
-Keep left:  0.000%
-Speed limit (30km/h):  0.000%
-No entry:  0.000%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+| **Predictions**      | **Confidence (%)**       |
+|----------------------|--------------------------|
+| Turn right ahead     | 99.983                   |
+| Stop                 | 0.017                    |
+| Keep left            | 0.000                    |
+| Speed limit (30km/h) | 0.000                    |
+| No entry             | 0.000                    |
+| **Ground Truth**     | **Go straight or right** |
 
 ![png](documentation/output_65_31.png)
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Yield
+| Predictions          | **Confidence (%)** |
+|----------------------|--------------------|
+| Yield                | 100.000            |
+| Speed limit (20km/h) | 0.000              |
+| Speed limit (30km/h) | 0.000              |
+| Speed limit (50km/h) | 0.000              |
+| Speed limit (60km/h) | 0.000              |
+| **Ground Truth**     | **Yield**          |
 
-Network Predictions:
-Yield:  100.000%
-Speed limit (20km/h):  0.000%
-Speed limit (30km/h):  0.000%
-Speed limit (50km/h):  0.000%
-Speed limit (60km/h):  0.000%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+![](documentation/output_65_33.png)
 
-![png](documentation/output_65_33.png)
+ 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Ground Truth:
-Roundabout mandatory
+| **Predictions**                                    | **Confidence (%)**       |
+|----------------------------------------------------|--------------------------|
+| Roundabout mandatory                               | 42.161                   |
+| End of no passing by vehicles over 3.5 metric tons | 38.446                   |
+| Right-of-way at the next intersection              | 13.663                   |
+| Priority road                                      | 2.242                    |
+| Keep right                                         | 1.334                    |
+| **Ground Truth**                                   | **Roundabout mandatory** |
 
-Network Predictions:
-Roundabout mandatory:  42.161%
-End of no passing by vehicles over 3.5 metric tons:  38.446%
-Priority road:  13.663%
-Right-of-way at the next intersection:  2.242%
-Keep right:  1.334%
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+=
 
-The first image might be difficult to classify because ...
+For the complete implementation and notebook:
 
-#### 2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
-
-Here are the results of the prediction:
-
-| Image         | Prediction    |
-|---------------|---------------|
-| Stop Sign     | Stop sign     |
-| U-turn        | U-turn        |
-| Yield         | Yield         |
-| 100 km/h      | Bumpy Road    |
-| Slippery Road | Slippery Road |
-
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an
-accuracy of 80%. This compares favorably to the accuracy on the test set of ...
-
-#### 3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
-
-The code for making predictions on my final model is located in the 11th cell of
-the Ipython notebook.
-
-For the first image, the model is relatively sure that this is a stop sign
-(probability of 0.6), and the image does contain a stop sign. The top five soft
-max probabilities were
-
-| Probability | Prediction    |
-|-------------|---------------|
-| .60         | Stop sign     |
-| .20         | U-turn        |
-| .05         | Yield         |
-| .04         | Bumpy Road    |
-| .01         | Slippery Road |
-
-For the second image ...
-
-### (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-
-#### 1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
-
-If you looking for the implementation of the project:
-
-https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project
+[https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project](https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project)
