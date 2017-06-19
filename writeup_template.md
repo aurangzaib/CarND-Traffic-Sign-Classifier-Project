@@ -201,7 +201,7 @@ Grayscale the images.
 
 Normalize the dataset using Feature Scaling.
 
-[Yann LeCun Paper](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf )
+[Yann LeCun Paper](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf)
 describes that the color channel info doesn't play any useful part in
 classification, so we apply grayscaling on the images to have uniform values in
 all 3 channels. The images are transformed to 3 channel grayscale using OpenCV.
@@ -325,7 +325,7 @@ def augment_dataset(features, labels, n_classes):
             # get a random class from 0 to 42
             random_class = randint(0, n_classes)
             # select 10 features and labels of that class
-            selected_index = get_classes_samples(random_class, labels)[random_class:random_class + 1]
+            selected_index = get_classes_samples(random_class, labels [random_class:random_class + 1]
             # print("index: ", selected_index)
             selected_labels = labels[selected_index]
             # perform transformation in each of the features
@@ -365,24 +365,25 @@ The model consists of the following layers:
 
  
 
-| Layer                   | Description                  | Filter Weight  | Filter Bias | Stride | Padding | Dropout | Dimension                                   | Parameter |
-|-------------------------|------------------------------|----------------|-------------|--------|---------|---------|---------------------------------------------|-----------|
-| **Layer 1**             | Convolutional                | 5x5x6          | 6           | 2x2    | Valid   | 0.9     | Input      32x32x3                          | 156       |
-|                         |                              |                |             |        |         |         | ReLU       28x28x6                          |           |
-|                         |                              |                |             |        |         |         | Max Pooling   14x14x6                       |           |
-| **Layer 2**             | Convolutional                | 5x5x16         | 16          | 2x2    | Valid   | 0.9     | Input      14x14x6                          | 2416      |
-|                         |                              |                |             |        |         |         | ReLU      10x10x16                          |           |
-|                         |                              |                |             |        |         |         | Max Pooling  5x5x16                         |           |
-| **Flatten**             |                              |                |             |        |         |         | 400                                         |           |
-| **Layer 3**             | Fully Connected              | 400x120        | 120         |        |         | 0.6     | Input             400                       | 48120     |
-|                         |                              |                |             |        |         |         | ReLU              120                       |           |
-| **Layer 4**             | Fully Connected              | 120x84         | 84          |        |         | 0.5     | Input             120                       | 10164     |
-|                         |                              |                |             |        |         |         | ReLU               84                       |           |
-| **Layer 5**             | Output                       | 84x43          | 43          |        |         |         | Input               84                      | 3655      |
-|                         |                              |                |             |        |         |         | Logits              84                      |           |
+| Layer       | Description     | Filter Weight | Filter Bias | Stride | Padding | Dropout | Dimension           | Parameter |
+|-------------|-----------------|---------------|-------------|--------|---------|---------|---------------------|-----------|
+| **Layer 1** | Convolutional   | 5x5x6         | 6           | 2x2    | Valid   | 0.9     | Input 32x32x3       | 156       |
+|             |                 |               |             |        |         |         | ReLU 28x28x6        |           |
+|             |                 |               |             |        |         |         | Max Pooling 14x14x6 |           |
+| **Layer 2** | Convolutional   | 5x5x16        | 16          | 2x2    | Valid   | 0.9     | Input 14x14x6       | 2416      |
+|             |                 |               |             |        |         |         | ReLU 10x10x16       |           |
+|             |                 |               |             |        |         |         | Max Pooling 5x5x16  |           |
+| **Flatten** |                 |               |             |        |         |         | 400                 |           |
+| **Layer 3** | Fully Connected | 400x120       | 120         |        |         | 0.6     | Input 400           | 48120     |
+|             |                 |               |             |        |         |         | ReLU 120            |           |
+| **Layer 4** | Fully Connected | 120x84        | 84          |        |         | 0.5     | Input 120           | 10164     |
+|             |                 |               |             |        |         |         | ReLU 84             |           |
+| **Layer 5** | Output          | 84x43         | 43          |        |         |         | Input 84            | 3655      |
+|             |                 |               |             |        |         |         | Logits 84           |           |
 
  
-```python
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ python
 hyper_params = {
     "mu": 0,
     "stddev": 0.1,
@@ -392,53 +393,422 @@ hyper_params = {
     "dropouts": [.9, .9, .6, .5],
     "test_dropouts": [1., 1., 1., 1.]
 }
-```
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  
 
-#### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
+Now we will train the classifier.
 
-To train the model, I used an ....
+ 
 
-#### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
+I used Adam Optimizer to optimize Weights and Biases using Back Propogation
+instead of using Stochastic Gradient Descent.
 
-My final model results were: \* training set accuracy of ? \* validation set
-accuracy of ? \* test set accuracy of ?
+ 
 
-If an iterative approach was chosen: \* What was the first architecture that was
-tried and why was it chosen? \* What were some problems with the initial
-architecture? \* How was the architecture adjusted and why was it adjusted?
-Typical adjustments could include choosing a different model architecture,
-adding or taking away layers (pooling, dropout, convolution, etc), using an
-activation function or changing the activation function. One common
-justification for adjusting an architecture would be due to overfitting or
-underfitting. A high accuracy on the training set but low accuracy on the
-validation set indicates over fitting; a low accuracy on both sets indicates
-under fitting. \* Which parameters were tuned? How were they adjusted and why?
-\* What are some of the important design choices and why were they chosen? For
-example, why might a convolution layer work well with this problem? How might a
-dropout layer help with creating a successful model?
+Following is the implementation of the LeNet Architecture. For implementation
+details of each layer, please have a look to the [Github
+repo.](https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project)
 
-If a well known architecture was chosen: \* What architecture was chosen? \* Why
-did you believe it would be relevant to the traffic sign application? \* How
-does the final model's accuracy on the training, validation and test set provide
-evidence that the model is working well?
+ 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ python
+def le_net(_x_, mu, stddev, dropouts, input_channels=1, output_channels=10):
+    from tensorflow.contrib.layers import flatten
+    train_dropouts = {
+        'c1': dropouts[0],
+        'c2': dropouts[1],
+        'fc1': dropouts[2],
+        'fc2': dropouts[3],
+    }
+    w, b = get_weights_biases(mu, stddev, input_channels, output_channels)
+    padding = 'VALID'
+    k = 2
+    st, pool_st, pool_k = [1, 1, 1, 1], [1, k, k, 1], [1, k, k, 1]
+    # Layer 1 -- convolution layer:
+    conv1 = convolution_layer(_x_, w['c1'], b['c1'], st, padding, pool_k, pool_st, train_dropouts['c1'])
+    # Layer 2 -- convolution layer:
+    conv2 = convolution_layer(conv1, w['c2'], b['c2'], st, padding, pool_k, pool_st, train_dropouts['c2'])
+    # Flatten
+    fc1 = flatten(conv2)
+    print("Faltten: {}".format(fc1.get_shape()))
+    # Layer 3 -- fully connected layer:
+    fc1 = full_connected_layer(fc1, w['fc1'], b['fc1'], train_dropouts['fc1'])
+    # Layer 4 -- full connected layer:
+    fc2 = full_connected_layer(fc1, w['fc2'], b['fc2'], train_dropouts['fc2'])
+    # Layer 5 -- fully connected output layer:
+    out = output_layer(fc2, w['out'], b['out'])
+    # parameters in each layer
+    n_parameters(conv1, conv2, fc1, fc2, out)
+    return out
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+
+When training a network on not-so-powerful computers, it is important to apply
+Mini-batching so that the network can be trained with small chunks of the
+training data at a time without overloading the memory of the machine. I wrote
+following code for mini-batching:
+
+ 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ python
+def get_batches(_batch_size_, _features_, _labels_):
+    import math
+    total_size, index, batch = len(_features_), 0, []
+    n_batches = int(math.ceil(total_size / _batch_size_)) if _batch_size_ > 0 else 0
+    for _i_ in range(n_batches - 1):
+        batch.append([_features_[index:index + _batch_size_],
+                      _labels_[index:index + _batch_size_]])
+        index += _batch_size_
+    batch.append([_features_[index:], _labels_[index:]])
+    return batch
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+
+Now, for actual training of the network, we need to create a session of
+TensorFlow:
+
+ 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ python
+retrain_model = True
+if retrain_model:
+    with tf.Session() as sess:
+        sess.run(init)
+        print("Training....")
+        for e in range(hyper_params['epoch']):
+            # training the network
+            x_train_p, y_train_p = shuffle(x_train_p, y_train_p)
+            batches = get_batches(hyper_params['batch_size'], x_train_p, y_train_p)
+            for batch_x, batch_y in batches:
+                batch_x, batch_y = shuffle(batch_x, batch_y)
+                sess.run(optimizer, feed_dict={
+                    x: batch_x, y: batch_y,
+                    dropouts: hyper_params['dropouts']
+                })
+            # validation the network
+            validation_accuracy = sess.run(accuracy, feed_dict={
+                x: x_validation_p, y: y_validation_p,
+                dropouts: hyper_params['test_dropouts']
+            })
+            print("{}th epoch - before: {:2.3f}%".format(e + 1, validation_accuracy * 100))
+        saver.save(sess, save_file)
+    print("Model saved")
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+
+My results for the Validation sets are:
+
+ 
+
+| Epochs | Accuracy (%) | Epochs | Accuracy (%) |
+|--------|--------------|--------|--------------|
+| 1st    | 65.376       | 2nd    | 79.557       |
+| 3rd    | 83.903       | 4th    | 86.469       |
+| 5th    | 88.599       | 6th    | 89.438       |
+| 7th    | 89.739       | 8th    | 90.530       |
+| 9th    | 90.665       | 10th   | 91.354       |
+| 11th   | 91.291       | 12th   | 91.876       |
+| 13th   | 92.336       | 14th   | 92.185       |
+| 15th   | 92.272       | 16th   | 92.637       |
+| 17th   | 92.605       | 18th   | 92.866       |
+| 19th   | 91.568       | 20     | 93.009       |
+| 21st   | 93.389       | 22nd   | 93.199       |
+| 23rd   | 93.436       | 24th   | 93.515       |
+| 25th   | 93.793       |        |              |
+
+ 
+
+Now comes the part where we test the accuracy of the network on the hidden test
+data.
+
+ 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ python
+test_data = True
+if test_data:
+    with tf.Session() as sess:
+        saver.restore(sess, save_file)
+        print("Model restored")
+        test_accuracy = sess.run(accuracy, feed_dict={
+            x: x_test_p,
+            y: y_test_p,
+            dropouts: hyper_params['test_dropouts']
+        })
+        print("test accuracy: {:2.3f}%".format(test_accuracy * 100))
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+
+The network is able to achieve 95.306% accuracy on the test data:
+
+| Test Accuracy | 95.306% |
+|---------------|---------|
+
+
+ 
 
 ### Test a Model on New Images
 
-#### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
+ 
 
-Here are five German traffic signs that I found on the web:
+To give myself more insight into how your model is working, I downloaded several
+images from the internet of traffic signs and tested the accuracy of the
+pre-trained network.
 
-![alt text](./examples/placeholder.png)
+![png](documentation/output_58_0.png)
 
-![alt text](./examples/placeholder.png)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ python
+x_test_new_p, y_test_new_p = pre_process(x_test_new, y_test_new)
+visualize_test_images(x_test_new)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-![alt text](./examples/placeholder.png)
+![](documentation/output_59_0.png)
 
-![alt text](./examples/placeholder.png)
+ 
 
-![alt text](./examples/placeholder.png)
+~   png
+
+![png](documentation/output_65_1.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+No Vehicle
+ 
+Network Predictions:
+No vehicles:  100.000%
+Speed limit (70km/h):  0.000%
+Speed limit (50km/h):  0.000%
+Speed limit (120km/h):  0.000%
+Speed limit (80km/h):  0.000%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_3.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Dangerous curve left
+
+Network Predictions:
+Dangerous curve to the left:  100.000%
+Slippery road:  0.000%
+Right-of-way at the next intersection:  0.000%
+Double curve:  0.000%
+Road work:  0.000%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_5.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Bicycle crossing
+
+Network Predictions:
+Road narrows on the right:  42.401%
+Pedestrians:  37.532%
+General caution:  19.522%
+Traffic signals:  0.370%
+Right-of-way at the next intersection:  0.150%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_7.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Roundabout mandatory
+
+Network Predictions:
+Roundabout mandatory:  84.611%
+Priority road:  8.660%
+End of no passing by vehicles over 3.5 metric tons:  3.120%
+Right-of-way at the next intersection:  2.012%
+Speed limit (100km/h):  0.713%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_9.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Ahead Only
+
+Network Predictions:
+Ahead only:  100.000%
+No passing:  0.000%
+Bicycles crossing:  0.000%
+Turn left ahead:  0.000%
+Speed limit (60km/h):  0.000%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_11.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Traffic Signals
+
+Network Predictions:
+Road narrows on the right:  98.333%
+Pedestrians:  0.889%
+Road work:  0.563%
+Children crossing:  0.071%
+General caution:  0.052%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![](documentation/output_65_13.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Traffic Signals
+
+Network Predictions:
+Beware of ice/snow:  56.233%
+Right-of-way at the next intersection:  27.989%
+Double curve:  7.642%
+Traffic signals:  2.601%
+Children crossing:  1.434%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_15.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Roundabout mandatory
+
+Network Predictions:
+Yield:  71.145%
+No vehicles:  9.539%
+Stop:  6.892%
+Priority road:  3.922%
+Road work:  1.760%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_17.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Traffic signals
+
+Network Predictions:
+General caution:  54.849%
+Traffic signals:  45.148%
+Pedestrians:  0.003%
+Right-of-way at the next intersection:  0.000%
+Road narrows on the right:  0.000%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_19.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Traffic signals
+
+Network Predictions:
+Traffic signals:  95.580%
+General caution:  4.420%
+Road narrows on the right:  0.000%
+Pedestrians:  0.000%
+Road work:  0.000%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_21.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Slippery road
+
+Network Predictions:
+No entry:  99.996%
+Stop:  0.004%
+Turn right ahead:  0.000%
+Roundabout mandatory:  0.000%
+Speed limit (70km/h):  0.000%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_23.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Traffic signals
+
+Network Predictions:
+General caution:  99.994%
+Traffic signals:  0.006%
+Pedestrians:  0.000%
+Bumpy road:  0.000%
+Road narrows on the right:  0.000%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_25.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Two Symbols
+
+Network Predictions:
+No passing:  78.461%
+Keep left:  9.933%
+Yield:  8.010%
+No passing for vehicles over 3.5 metric tons:  0.935%
+Speed limit (60km/h):  0.751%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_27.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Priority road
+
+Network Predictions:
+Priority road:  100.000%
+Roundabout mandatory:  0.000%
+Right-of-way at the next intersection:  0.000%
+Yield:  0.000%
+No passing:  0.000%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_29.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Go straight or right
+
+Network Predictions:
+Turn right ahead:  99.983%
+Stop:  0.017%
+Keep left:  0.000%
+Speed limit (30km/h):  0.000%
+No entry:  0.000%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_31.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Yield
+
+Network Predictions:
+Yield:  100.000%
+Speed limit (20km/h):  0.000%
+Speed limit (30km/h):  0.000%
+Speed limit (50km/h):  0.000%
+Speed limit (60km/h):  0.000%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+![png](documentation/output_65_33.png)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Ground Truth:
+Roundabout mandatory
+
+Network Predictions:
+Roundabout mandatory:  42.161%
+End of no passing by vehicles over 3.5 metric tons:  38.446%
+Priority road:  13.663%
+Right-of-way at the next intersection:  2.242%
+Keep right:  1.334%
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The first image might be difficult to classify because ...
 
