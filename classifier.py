@@ -35,7 +35,7 @@ def classify_traffic_sign():
 
     # merge train and augmented datasets
     # should be True except when debugging
-    expand_train_data = False
+    expand_train_data = True
     if expand_train_data:
         x_train = np.append(x_train, x_augmented, axis=0)
         y_train = np.append(y_train, y_augmented)
