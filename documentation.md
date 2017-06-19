@@ -271,8 +271,6 @@ With augmentation, we gain another advantage that now our training set is larger
 than before and also more varied so it also helps in reducing the overfit during
 the training process.
 
- 
-
 I primarily used OpenCV for image transformations
 
  
@@ -751,6 +749,8 @@ visualize_test_images(x_test_new)
 | No entry             | 0.000                    |
 | **Ground Truth**     | **Go straight or right** |
 
+<br />
+
 ![png](documentation/output_65_31.png)
 
 | Predictions          | **Confidence (%)** |
@@ -763,8 +763,6 @@ visualize_test_images(x_test_new)
 | **Ground Truth**     | **Yield**          |
 
 ![](documentation/output_65_33.png)
-
- 
 
 | **Predictions**                                    | **Confidence (%)**       |
 |----------------------------------------------------|--------------------------|
@@ -780,4 +778,4 @@ visualize_test_images(x_test_new)
 
 For the complete implementation and notebook:
 
-[https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project](https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project)
+<https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project>
