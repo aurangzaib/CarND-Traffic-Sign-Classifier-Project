@@ -45,39 +45,310 @@ You're reading it! and here is a link to my [project code](https://github.com/ud
 I used the pandas library to calculate summary statistics of the traffic
 signs data set:
 
-* The size of training set is ?
-* The size of the validation set is ?
-* The size of test set is ?
-* The shape of a traffic sign image is ?
-* The number of unique classes/labels in the data set is ?
+```python
+def get_data_summary(feature, label):
+    import numpy as np
+    # What's the shape of an traffic sign image?
+    image_shape = feature[0].shape
+    # How many unique classes/labels there are in the dataset.
+    unique_classes, n_samples = np.unique(label,
+                                          return_index=False,
+                                          return_inverse=False,
+                                          return_counts=True)
+    n_classes = len(unique_classes)
+    n_samples = n_samples.tolist()
+    print("Image data shape =", image_shape)
+    return image_shape[0], image_shape[2], n_classes, n_samples
+
+
+def train_test_examples(x_train, x_validation, x_test):
+    # Number of training examples
+    n_train = len(x_train)
+    # Number of validation examples
+    n_validation = len(x_validation)
+    # Number of testing examples.
+    n_test = len(x_test)
+    print("Number of training examples =", n_train)
+    print("Number of validation examples =", n_validation)
+    print("Number of testing examples =", n_test)
+```
+* Image shape = (32, 32, 3)
+* Number of training examples = 34799
+* Number of validation examples = 12630
+* Number of testing examples = 4410
+* Number of unique classes = 43 
 
 ####2. Include an exploratory visualization of the dataset.
 
 Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
 
-![alt text][image1]
+```python
+def get_classes_samples(index, labels):
+    return [i for i, _x_ in enumerate(labels) if _x_ == index]
+
+
+def loopover_data(index, x, y, high_range, steps):
+    import matplotlib.pyplot as plt
+    % matplotlib inline
+    images = get_classes_samples(index, y)
+    _images_ = images[:high_range:steps] if len(images) > 100 else images
+    imgaes_in_row = int(high_range/steps)
+    fig, axes = plt.subplots(1, imgaes_in_row, figsize=(15, 15))
+    for _index, image_index in enumerate(_images_):
+        image = x[image_index].squeeze()
+        axes[_index].imshow(image)
+    plt.show()
+
+
+def visualize_data(x, y, n_classes, n_samples, high_range=160, steps=20, show_desc=True, single_class=False):
+    from pandas.io.parsers import read_csv
+    label_signs = read_csv('signnames.csv').values[:, 1]  # fetch only sign names
+    if single_class:
+        loopover_data(n_classes, x, y, high_range, steps)
+    else:
+        for index in range(n_classes):
+            if show_desc:
+                print("Class {} -- {} -- {} samples".format(index + 1, label_signs[index], n_samples[index]))
+            loopover_data(index, x, y, high_range, steps)
+```
+
+    Class 1 -- Speed limit (20km/h) -- 180 samples
+
+
+
+![png](documentation/output_12_1.png)
+
+
+    Class 2 -- Speed limit (30km/h) -- 1980 samples
+
+
+
+![png](documentation/output_12_3.png)
+
+
+    Class 3 -- Speed limit (50km/h) -- 2010 samples
+
+
+
+![png](documentation/output_12_5.png)
+
+
+    Class 4 -- Speed limit (60km/h) -- 1260 samples
+
+
+
+![png](documentation/output_12_7.png)
+
+
+    Class 5 -- Speed limit (70km/h) -- 1770 samples
+
+
+
+![png](documentation/output_12_9.png)
+
+
+    Class 6 -- Speed limit (80km/h) -- 1650 samples
+
+
+
+![png](documentation/output_12_11.png)
+
+
+    Class 7 -- End of speed limit (80km/h) -- 360 samples
+
+
+
+![png](documentation/output_12_13.png)
+
+
+    Class 8 -- Speed limit (100km/h) -- 1290 samples
+
+
+
+![png](documentation/output_12_15.png)
+
+
+    Class 9 -- Speed limit (120km/h) -- 1260 samples
+
+
+
+![png](documentation/output_12_17.png)
+
+
+    Class 10 -- No passing -- 1320 samples
+
+
+![png](documentation/output_12_19.png)
+
+
+```python
+def histogram_data(x, n_samples, n_classes):
+    import matplotlib.pyplot as plt
+    width = 1 / 1.2
+    fig = plt.figure(figsize=(15, 6))
+    ax = fig.add_subplot(111)
+    ax.set_title('Samples Distribution')
+    ax.set_xlabel('Classes')
+    ax.set_ylabel('Number of Samples')
+    plt.bar(range(n_classes), n_samples, width, color="blue")
+    plt.show()
+```
+
+#### Labels distribution in Train Dataset.
+
+
+![png](documentation/output_15_0.png)
+
+
+#### Labels distribution in Augmented Dataset.
+
+
+![png](documentation/output_17_1.png)
+
+
+#### Labels distribution in Test Dataset.
+
+
+
+![png](documentation/output_19_1.png)
+
 
 ###Design and Test a Model Architecture
 
 ####1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
 
-As a first step, I decided to convert the images to grayscale because ...
 
-Here is an example of a traffic sign image before and after grayscaling.
+### Pre-process the Data Set (normalization, grayscale, etc.)
 
-![alt text][image2]
+The train, validation and test datasets are normalized using Feature Rescaling.
 
-As a last step, I normalized the image data because ...
+The images are then transformed to 3 channel grayscale using OpenCV.
 
-I decided to generate additional data because ... 
 
-To add more data to the the data set, I used the following techniques because ... 
+```python
+def grayscale(x):
+    import cv2 as cv
+    import numpy as np
+    for index, image in enumerate(x):
+        gray = cv.cvtColor(image, cv.COLOR_RGB2GRAY)
+        im2 = np.zeros_like(image)
+        im2[:, :, 0], im2[:, :, 1], im2[:, :, 2] = gray, gray, gray
+        x[index] = im2
+    return x
 
-Here is an example of an original image and an augmented image:
 
-![alt text][image3]
+def normalizer(x):
+    import numpy as np
+    x_min = float(np.min(x))
+    x_max = float(np.max(x))
+    x = (x - x_min) / (x_max - x_min)
+    return x
 
-The difference between the original data set and the augmented data set is the following ... 
+
+def pre_process(features, labels, is_train=False):
+    from sklearn.utils import shuffle
+    assert (len(features) == len(labels))
+    features = grayscale(features)
+    features = normalizer(features)
+    if is_train:
+        features, labels = shuffle(features, labels)
+    return features, labels
+```
+
+![png](documentation/output_25_0.png)
+
+![png](documentation/output_27_0.png)
+
+### Image Transformations and Rotations:
+
+
+```python
+def visualize_augmented_features(features, labels, index, images_in_row=1):
+    import matplotlib.pyplot as plt
+    from random import choice
+    %matplotlib inline
+    indices = get_classes_samples(index, labels)
+    fig, axes = plt.subplots(1, images_in_row, figsize=(15, 15))
+    for index in range(images_in_row):
+        random_index = choice(indices)
+        image = features[random_index].squeeze()
+        axes[index].imshow(image)
+    plt.show()
+    
+    
+def perform_rotation(image, cols, rows):
+    from random import randint
+    import cv2
+    center = (int(cols / 2), int(cols / 2))
+    angle = randint(-12, 12)
+    transformer = cv2.getRotationMatrix2D(center, angle, 1)
+    image = cv2.warpAffine(image, transformer, (cols, rows))
+    return image
+
+
+def perform_translation(image, cols, rows, value):
+    import cv2
+    import numpy as np
+    transformer = np.float32([[1, 0, value], [0, 1, value]])
+    image = cv2.warpAffine(image, transformer, (cols, rows))
+    return image
+
+    
+def perform_transformation(feature, label):
+    from random import randint
+    transform_level = 10
+    rows, cols, channels = feature.shape
+    rotational_value = randint(-int(rows / transform_level), int(rows / transform_level))
+    image = perform_rotation(feature, cols, rows)
+    image = perform_translation(image, cols, rows, rotational_value)
+    return image, label
+
+
+def augment_dataset(features, labels, n_classes):
+    from random import randint
+    from sklearn.utils import shuffle
+    import numpy as np
+    transforms_per_image = 20
+    iterations = 100
+    augmented_features, augmented_labels = [], []
+    for _i_ in range(iterations):
+        for i in range(transforms_per_image):
+            # get a random class from 0 to 42
+            random_class = randint(0, n_classes)
+            # select 10 features and labels of that class
+            selected_index = get_classes_samples(random_class, labels)[random_class:random_class + 1]
+            # print("index: ", selected_index)
+            selected_labels = labels[selected_index]
+            # perform transformation in each of the features
+            for index, transform_y in zip(selected_index, selected_labels):
+                # get rows and cols of the image
+                transform_x = features[index]
+                rows, cols, channels = transform_x.shape
+                # create several transforms from a single image
+                for value in range(-int(rows), int(rows), 4):
+                    # perform transformations on the image
+                    aug_x, aug_y = perform_transformation(transform_x, transform_y)
+                    augmented_features.append(aug_x)
+                    augmented_labels.append(aug_y)
+    # append the results of transformations
+    augmented_features, augmented_labels = shuffle(augmented_features, augmented_labels)
+    augmented_features = np.array(augmented_features)
+    # assertion
+    assert (len(augmented_features) == len(augmented_labels))
+    return augmented_features, augmented_labels
+```
+
+#### Visualize how the transformation is performed.
+
+
+![png](documentation/output_31_0.png)
+
+
+![png](documentation/output_31_1.png)
+
+
+![png](documentation/output_31_2.png)
+
 
 
 ####2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.

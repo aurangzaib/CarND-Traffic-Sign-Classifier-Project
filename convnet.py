@@ -1,7 +1,7 @@
 hyper_params = {
     "mu": 0,
     "stddev": 0.1,
-    "epoch": 25,
+    "epoch": 10,
     "batch_size": 128,
     "rate": 0.001,
     "dropouts": [.9, .9, .6, .5],

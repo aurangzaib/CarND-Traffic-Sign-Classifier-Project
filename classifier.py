@@ -1,30 +1,41 @@
 def classify_traffic_sign():
-    from helper import get_batches, load_data, pre_process
     from helper import get_new_test_data, traffic_sign_name
-    from helper import augment_dataset, debug_features, save_data
-    from convnet import le_net, hyper_params
-    from visualization import get_data_summary
+    from helper import get_batches, load_data, pre_process
+    from helper import augment_dataset, save_data
     from visualization import train_test_examples
+    from visualization import get_data_summary
+    from convnet import le_net, hyper_params
+    from sklearn import model_selection
+    from keras.datasets import cifar10
     from sklearn.utils import shuffle
     import tensorflow as tf
     import numpy as np
     import os
 
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
     # remove previous tensors and operations
     tf.reset_default_graph()
     save_file = './model/lenet'
     augmented_file = 'transforms.p'
     # load data
-    x_train, y_train = load_data('train.p')
-    x_validation, y_validation = load_data('test.p')
-    x_test, y_test = load_data('valid.p')
+    load_traffic_data = True
+    if load_traffic_data:
+        x_train, y_train = load_data('train.p')
+        x_validation, y_validation = load_data('test.p')
+        x_test, y_test = load_data('valid.p')
+    else:
+        (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+        # y_train.shape is 2d, (50000, 1). flatten the array.
+        y_train = y_train.reshape(-1)
+        y_test = y_test.reshape(-1)
+        x_train, x_validation, y_train, y_validation = model_selection.train_test_split(x_train, y_train,
+                                                                                        test_size=0.33,
+                                                                                        random_state=42)
     x_augmented, y_augmented = load_data(augmented_file)
 
     # merge train and augmented datasets
     # should be True except when debugging
-    expand_train_data = True
+    expand_train_data = False
     if expand_train_data:
         x_train = np.append(x_train, x_augmented, axis=0)
         y_train = np.append(y_train, y_augmented)

@@ -10,6 +10,7 @@ def get_data_summary(feature, label):
     n_classes = len(unique_classes)
     n_samples = n_samples.tolist()
     print("Image data shape =", image_shape)
+    print("Number of classes: {}".format(n_classes))
     return image_shape[0], image_shape[2], n_classes, n_samples
 
 
