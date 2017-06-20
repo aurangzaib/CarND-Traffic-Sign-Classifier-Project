@@ -176,8 +176,14 @@ all 3 channels. The images are transformed to 3 channel grayscale using OpenCV.
  
 
 The train, validation and test datasets are normalized using Feature Rescaling.
-With normalization we have the pixel values ranging from 0 to 1 instead of 0 to
-255.
+
+| **Property**          | **Value** |
+|-----------------------|-----------|
+| Before Normalization: |           |
+| Pixel Value           | 0 to 255  |
+| After Normalization:  |           |
+| Pixel Value           | \-1 to +1 |
+| Mean                  | \~0       |
 
  
 
