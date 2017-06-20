@@ -34,17 +34,13 @@ available in the dataset.
 As we will see, the dataset doesn't have a uniform distribution of the samples
 for each class.
 
- 
-
--   Image shape = (32, 32, 3)
-
--   Number of training examples = 34799
-
--   Number of validation examples = 12630
-
--   Number of testing examples = 4410
-
--   Number of unique classes = 43
+| **Property**       | **Summary** |
+|--------------------|-------------|
+| Image shape        | 32x32x3     |
+| Training samples   | 34799       |
+| Validation samples | 12630       |
+| Testing samples    | 4410        |
+| Unique classes     | 43          |
 
  
 
@@ -228,27 +224,27 @@ I primarily used OpenCV for image transformations.
 
 The model consists of the following layers:
 
-| Layer       | Description     | Filter Weight | Filter Bias | Stride | Padding | Dropout | Dimension            | Parameter |
-|-------------|-----------------|---------------|-------------|--------|---------|---------|----------------------|-----------|
-| **Layer 1** | Convolutional   | 5x5x6         | 6           | 2x2    | Valid   | 0.9     | Input: 32x32x3       | 156       |
-|             |                 |               |             |        |         |         | ReLU: 28x28x6        |           |
-|             |                 |               |             |        |         |         | Max Pooling: 14x14x6 |           |
-| **Layer 2** | Convolutional   | 5x5x16        | 16          | 2x2    | Valid   | 0.9     | Input: 14x14x6       | 2416      |
-|             |                 |               |             |        |         |         | ReLU: 10x10x16       |           |
-|             |                 |               |             |        |         |         | Max Pooling: 5x5x16  |           |
-| **Flatten** |                 |               |             |        |         |         | 400                  |           |
-| **Layer 3** | Fully Connected | 400x120       | 120         |        |         | 0.6     | Input: 400           | 48120     |
-|             |                 |               |             |        |         |         | ReLU: 120            |           |
-| **Layer 4** | Fully Connected | 120x84        | 84          |        |         | 0.5     | Input: 120           | 10164     |
-|             |                 |               |             |        |         |         | ReLU: 84             |           |
-| **Layer 5** | Output          | 84x43         | 43          |        |         |         | Input: 84            | 3655      |
-|             |                 |               |             |        |         |         | Logits: 84           |           |
+| **Layer**   | **Description** | **Filter Weight** | **Filter Bias** | **Stride** | **Padding** | **Dropout** | **Dimension**        | **Parameter** |
+|-------------|-----------------|-------------------|-----------------|------------|-------------|-------------|----------------------|---------------|
+| **Layer 1** | Convolutional   | 5x5x6             | 6               | 2x2        | Valid       | 0.9         | Input: 32x32x3       | 156           |
+|             |                 |                   |                 |            |             |             | ReLU: 28x28x6        |               |
+|             |                 |                   |                 |            |             |             | Max Pooling: 14x14x6 |               |
+| **Layer 2** | Convolutional   | 5x5x16            | 16              | 2x2        | Valid       | 0.9         | Input: 14x14x6       | 2416          |
+|             |                 |                   |                 |            |             |             | ReLU: 10x10x16       |               |
+|             |                 |                   |                 |            |             |             | Max Pooling: 5x5x16  |               |
+| **Flatten** |                 |                   |                 |            |             |             | 400                  |               |
+| **Layer 3** | Fully Connected | 400x120           | 120             |            |             | 0.6         | Input: 400           | 48120         |
+|             |                 |                   |                 |            |             |             | ReLU: 120            |               |
+| **Layer 4** | Fully Connected | 120x84            | 84              |            |             | 0.5         | Input: 120           | 10164         |
+|             |                 |                   |                 |            |             |             | ReLU: 84             |               |
+| **Layer 5** | Output          | 84x43             | 43              |            |             |             | Input: 84            | 3655          |
+|             |                 |                   |                 |            |             |             | Logits: 84           |               |
 
  
 
 The hyper parameters are as follows:
 
-| Parameter          | Value        |
+| **Parameter**      | **Value**    |
 |--------------------|--------------|
 | Mean               | 0            |
 | Standard Deviation | 0.1          |
@@ -287,21 +283,21 @@ TensorFlow and optimize the parameters. My results for the Validation sets are:
 
  
 
-| Epochs | Accuracy (%) | Epochs | Accuracy (%) |
-|--------|--------------|--------|--------------|
-| 1st    | 65.376       | 2nd    | 79.557       |
-| 3rd    | 83.903       | 4th    | 86.469       |
-| 5th    | 88.599       | 6th    | 89.438       |
-| 7th    | 89.739       | 8th    | 90.530       |
-| 9th    | 90.665       | 10th   | 91.354       |
-| 11th   | 91.291       | 12th   | 91.876       |
-| 13th   | 92.336       | 14th   | 92.185       |
-| 15th   | 92.272       | 16th   | 92.637       |
-| 17th   | 92.605       | 18th   | 92.866       |
-| 19th   | 91.568       | 20     | 93.009       |
-| 21st   | 93.389       | 22nd   | 93.199       |
-| 23rd   | 93.436       | 24th   | 93.515       |
-| 25th   | 93.793       |        |              |
+| **Epochs** | **Accuracy (%)** | **Epochs** | **Accuracy (%)** |
+|------------|------------------|------------|------------------|
+| 1st        | 65.376           | 2nd        | 79.557           |
+| 3rd        | 83.903           | 4th        | 86.469           |
+| 5th        | 88.599           | 6th        | 89.438           |
+| 7th        | 89.739           | 8th        | 90.530           |
+| 9th        | 90.665           | 10th       | 91.354           |
+| 11th       | 91.291           | 12th       | 91.876           |
+| 13th       | 92.336           | 14th       | 92.185           |
+| 15th       | 92.272           | 16th       | 92.637           |
+| 17th       | 92.605           | 18th       | 92.866           |
+| 19th       | 91.568           | 20         | 93.009           |
+| 21st       | 93.389           | 22nd       | 93.199           |
+| 23rd       | 93.436           | 24th       | 93.515           |
+| 25th       | 93.793           |            |                  |
 
  
 
@@ -343,8 +339,6 @@ pre-trained network.
 | Speed limit (80km/h)  | 0.000              |
 | **Ground Truth**      | **No Vehicle**     |
 
----
-
 ![](documentation/output_65_3.png)
 
 | **Predictions**                       | **Confidence (%)**       |
@@ -355,8 +349,6 @@ pre-trained network.
 | Double curve                          | 0.000                    |
 | Road work                             | 0.000                    |
 | **Ground Truth**                      | **Dangerous curve left** |
-
----
 
 ![](documentation/output_65_5.png)
 
@@ -369,8 +361,6 @@ pre-trained network.
 | Right-of-way at the next intersection | 0.150                |
 | **Ground Truth**                      | **Bicycle crossing** |
 
----
-
 ![](documentation/output_65_7.png)
 
 | **Predictions**                                    | **Confidence (%)**       |
@@ -381,8 +371,6 @@ pre-trained network.
 | End of no passing by vehicles over 3.5 metric ton  | 2.012                    |
 | Speed limit (100km/h)                              | 0.713                    |
 | **Ground Truth**                                   | **Roundabout mandatory** |
-
----
 
 ![](documentation/output_65_9.png)
 
@@ -397,8 +385,6 @@ pre-trained network.
 
 ![](documentation/output_65_11.png)
 
----
-
 | **Predictions**           | **Confidence (%)**  |
 |---------------------------|---------------------|
 | Road narrows on the right | 98.333%             |
@@ -409,8 +395,6 @@ pre-trained network.
 | **Ground Truth**          | **Traffic Signals** |
 
 ![](documentation/output_65_13.png)
-
----
 
 | **Predictions**                       | **Confidence (%)**  |
 |---------------------------------------|---------------------|
@@ -423,8 +407,6 @@ pre-trained network.
 
 ![](documentation/output_65_15.png)
 
----
-
 | **Predictions**  | **Confidence (%)**       |
 |------------------|--------------------------|
 | Yield            | 71.145                   |
@@ -433,8 +415,6 @@ pre-trained network.
 | Priority road    | 3.922                    |
 | Road work        | 1.760                    |
 | **Ground Truth** | **Roundabout mandatory** |
-
----
 
 ![](documentation/output_65_17.png)
 
@@ -447,8 +427,6 @@ pre-trained network.
 | Road narrows on the right             | 0.000               |
 | **Ground Truth**                      | **Traffic signals** |
 
----
-
 ![](documentation/output_65_19.png)
 
 | **Prediction**            | **Confidence (%)**  |
@@ -460,8 +438,6 @@ pre-trained network.
 | Road work                 | 0.000               |
 | **Ground Truth**          | **Traffic signals** |
 
----
-
 ![](documentation/output_65_21.png)
 
 | **Prediction**       | **Confidence (%)** |
@@ -472,8 +448,6 @@ pre-trained network.
 | Roundabout mandatory | 0.000              |
 | Speed limit (70km/h) | 0.000              |
 | **Ground Truth**     | **Slippery road**  |
-
----
 
 ![](documentation/output_65_23.png)
 
@@ -488,8 +462,6 @@ pre-trained network.
 
 ![](documentation/output_65_25.png)
 
----
-
 | **Predictions**                              | **Confidence (%)** |
 |----------------------------------------------|--------------------|
 | No passing                                   | 78.461             |
@@ -498,8 +470,6 @@ pre-trained network.
 | No passing for vehicles over 3.5 metric tons | 0.935              |
 | Speed limit (60km/h)                         | 0.751              |
 | **Ground Truth**                             | **Two Symbols**    |
-
----
 
 ![](documentation/output_65_27.png)
 
@@ -512,8 +482,6 @@ pre-trained network.
 | No passing                            | 0.000              |
 | **Ground Truth**                      | **Priority road**  |
 
----
-
 ![](documentation/output_65_29.png)
 
 | **Predictions**      | **Confidence (%)**       |
@@ -525,8 +493,6 @@ pre-trained network.
 | No entry             | 0.000                    |
 | **Ground Truth**     | **Go straight or right** |
 
----
-
 ![](documentation/output_65_31.png)
 
 | Predictions          | **Confidence (%)** |
@@ -537,8 +503,6 @@ pre-trained network.
 | Speed limit (50km/h) | 0.000              |
 | Speed limit (60km/h) | 0.000              |
 | **Ground Truth**     | **Yield**          |
-
----
 
 ![](documentation/output_65_33.png)
 
