@@ -173,8 +173,6 @@ describes that the color channel info doesn't play any useful part in
 classification, so we apply grayscaling on the images to have uniform values in
 all 3 channels. The images are transformed to 3 channel grayscale using OpenCV.
 
- 
-
 The train, validation and test datasets are normalized using Feature Rescaling.
 
 | **Property**          | **Value** |
@@ -202,15 +200,13 @@ samples for each class. We can fix it by generating new images by performing
 transformation using translation, rotation, changing brightness etc. This is
 called Data Augmentation.
 
- 
-
 With augmentation, we gain another advantage that now our training set is larger
 than before and also more varied so it also helps in reducing the overfit during
 the training process.
 
 I primarily used OpenCV for image transformations.
 
- 
+
 
 #### Visualize how the transformation is performed.
 
@@ -275,14 +271,10 @@ the LeNet Architecture. For implementation details of each layer, please have a
 look to the [Github
 repo.](https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project)
 
- 
-
 When training a network on not-so-powerful computers, it is important to apply
 Mini-batching so that the network can be trained with small chunks of the
 training data at a time without overloading the memory of the machine. I wrote
 following code for mini-batching:
-
- 
 
 Now, for actual training of the network, we need to create a session of
 TensorFlow and optimize the parameters. My results for the Validation sets are:
