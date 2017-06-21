@@ -74,8 +74,6 @@ def train_test_examples(x_train, x_validation, x_test):
 
 #### **2. Include an exploratory visualization of the dataset:**
 
-Now we will visualize the dataset, what are the features available and how the
-labels are distributed in the dataset:
 
 ```python
 def get_classes_samples(index, labels):
@@ -105,7 +103,11 @@ def visualize_data(x, y, n_classes, n_samples, high_range=160, steps=20, show_de
             if show_desc:
                 print("Class {} -- {} -- {} samples".format(index + 1, label_signs[index], n_samples[index]))
             loopover_data(index, x, y, high_range, steps)
-``` 
+```
+
+Now we will visualize the dataset, what are the features available and how the
+labels are distributed in the dataset:
+
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Class 1 -- Speed limit (20km/h) -- 180 samples
