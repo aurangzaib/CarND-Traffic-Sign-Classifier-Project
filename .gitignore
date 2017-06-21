@@ -8,3 +8,7 @@ __pycache__
 augmentation-results
 test-data-old
 *.zip
+traffic-signs-data/test.p
+traffic-signs-data/train.p
+traffic-signs-data/transforms-train.p
+traffic-signs-data/valid.p

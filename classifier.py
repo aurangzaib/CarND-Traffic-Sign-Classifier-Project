@@ -89,10 +89,14 @@ def classify_traffic_sign():
 
     # training, validation and testing
     retrain_model = True
+    no_improvement_count = 0
+    prev_accuracy = 0
+    current_accuracy = 0
     if retrain_model:
         with tf.Session() as sess:
             sess.run(init)
             print("Training....")
+            prev_accuracy = current_accuracy
             for e in range(hyper_params['epoch']):
                 # training the network
                 x_train_p, y_train_p = shuffle(x_train_p, y_train_p)
@@ -109,6 +113,12 @@ def classify_traffic_sign():
                     dropouts: hyper_params['test_dropouts']
                 })
                 print("{}th epoch - before: {:2.3f}%".format(e + 1, validation_accuracy * 100))
+                # early termination
+                current_accuracy = validation_accuracy
+                no_improvement_count = no_improvement_count + 1 if current_accuracy < prev_accuracy else 0
+                print("no imp count: {}".format(no_improvement_count))
+                if no_improvement_count > 3:
+                    continue
             saver.save(sess, save_file)
             print("Model saved")
 

@@ -195,6 +195,9 @@ The train, validation and test datasets are normalized using Feature Rescaling.
 
  
 
+The idea for Label preserving data augmentation came from the [AlexNet for
+ImageNet Classification](https://goo.gl/i8MHfX)
+
 As we saw earlier, the dataset doesn’t contain the uniform distribution of the
 samples for each class. We can fix it by generating new images by performing
 transformation using translation, rotation, changing brightness etc. This is
@@ -205,8 +208,6 @@ than before and also more varied so it also helps in reducing the overfit during
 the training process.
 
 I primarily used OpenCV for image transformations.
-
-
 
 #### Visualize how the transformation is performed.
 
@@ -224,22 +225,63 @@ I primarily used OpenCV for image transformations.
 
  
 
-The model consists of the following layers:
+Now, I implemented the multi-layer Convolutional Neural Network architecture. 
+
+ 
+
+The starting point was the LeNet Architecture which consists of Convolution
+Layers followed by Fully Connected layers:
+
+ 
+
+![](documentation/lenet.png)
+
+Then I adjusted the architecture by following Sermanet & LeCun Publication on
+Traffic Sign Recognition.   
+[<http://yann.lecun.org/exdb/publis/psgz/sermanet-ijcnn-11.ps.gz>] 
+
+ 
+
+![](documentation/multiscale-cnn.png)
+
+ 
+
+Then I made tweak the architecture a little further by:
+
+-   Using 3 Convolution layers instead of 2 layers.
+
+-   Using Dropouts after the Fully Connected layers. Dropout was proposed by
+    [Geoffrey Hinton et al](https://goo.gl/Y7QH0b). It is a technique to reduce
+    overfit by randomly dropping the few units so that the network can never
+    rely on any given activation. Dropout helps network to learn redundant
+    representation of everything to make sure some of the information retain.
+
+ 
+
+*Note: When Dropout technique is used, the dropped out neurons do not contribute
+in forward and backward pass.*
+
+
+
+My architecture is slightly modified from the above mentioned reference
+architecture and is as follows: 
 
 | **Layer**   | **Description** | **Filter Weight** | **Filter Bias** | **Stride** | **Padding** | **Dropout** | **Dimension**        | **Parameter** |
 |-------------|-----------------|-------------------|-----------------|------------|-------------|-------------|----------------------|---------------|
-| **Layer 1** | Convolutional   | 5x5x6             | 6               | 2x2        | Valid       | 0.9         | Input: 32x32x3       | 156           |
+| **Layer 1** | Convolutional   | 5x5x6             | 6               | 2x2        | Valid       | 1.0         | Input: 32x32x3       | 156           |
 |             |                 |                   |                 |            |             |             | ReLU: 28x28x6        |               |
 |             |                 |                   |                 |            |             |             | Max Pooling: 14x14x6 |               |
-| **Layer 2** | Convolutional   | 5x5x16            | 16              | 2x2        | Valid       | 0.9         | Input: 14x14x6       | 2416          |
+| **Layer 2** | Convolutional   | 5x5x16            | 16              | 2x2        | Valid       | 1.0         | Input: 14x14x6       | 2416          |
 |             |                 |                   |                 |            |             |             | ReLU: 10x10x16       |               |
 |             |                 |                   |                 |            |             |             | Max Pooling: 5x5x16  |               |
+| **Layer 3** | Convolutional   | 5x5x400           | 400             | 2x2        | Valid       | 1.0         | Input: 5x5x16        |               |
+|             |                 |                   |                 |            |             |             | ReLU: 1x1x400        |               |
 | **Flatten** |                 |                   |                 |            |             |             | 400                  |               |
-| **Layer 3** | Fully Connected | 400x120           | 120             |            |             | 0.6         | Input: 400           | 48120         |
+| **Layer 4** | Fully Connected | 400x120           | 120             |            |             | 0.6         | Input: 400           | 48120         |
 |             |                 |                   |                 |            |             |             | ReLU: 120            |               |
-| **Layer 4** | Fully Connected | 120x84            | 84              |            |             | 0.5         | Input: 120           | 10164         |
+| **Layer 5** | Fully Connected | 120x84            | 84              |            |             | 0.5         | Input: 120           | 10164         |
 |             |                 |                   |                 |            |             |             | ReLU: 84             |               |
-| **Layer 5** | Output          | 84x43             | 43              |            |             |             | Input: 84            | 3655          |
+| **Layer 6** | Output          | 84x43             | 43              |            |             |             | Input: 84            | 3655          |
 |             |                 |                   |                 |            |             |             | Logits: 84           |               |
 
  
@@ -253,10 +295,11 @@ The hyper parameters are as follows:
 | Epochs             | 25           |
 | Batch Size         | 128          |
 | Learn Rate         | 0.001        |
-| Dropouts           | Layer 1: 0.9 |
-|                    | Layer 2: 0.9 |
+| Dropouts           | Layer 1: 1.0 |
+|                    | Layer 2: 1.0 |
 |                    | Layer 3: 0.6 |
 |                    | Layer 4: 0.5 |
+|                    | Layer 5: 0.5 |
 | Test Dropouts      | 1.0          |
 
  
@@ -271,10 +314,14 @@ the LeNet Architecture. For implementation details of each layer, please have a
 look to the [Github
 repo.](https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project)
 
+ 
+
 When training a network on not-so-powerful computers, it is important to apply
 Mini-batching so that the network can be trained with small chunks of the
 training data at a time without overloading the memory of the machine. I wrote
 following code for mini-batching:
+
+ 
 
 Now, for actual training of the network, we need to create a session of
 TensorFlow and optimize the parameters. My results for the Validation sets are:
@@ -283,19 +330,19 @@ TensorFlow and optimize the parameters. My results for the Validation sets are:
 
 | **Epochs** | **Accuracy (%)** | **Epochs** | **Accuracy (%)** |
 |------------|------------------|------------|------------------|
-| 1st        | 65.376           | 2nd        | 79.557           |
-| 3rd        | 83.903           | 4th        | 86.469           |
-| 5th        | 88.599           | 6th        | 89.438           |
-| 7th        | 89.739           | 8th        | 90.530           |
-| 9th        | 90.665           | 10th       | 91.354           |
-| 11th       | 91.291           | 12th       | 91.876           |
-| 13th       | 92.336           | 14th       | 92.185           |
-| 15th       | 92.272           | 16th       | 92.637           |
-| 17th       | 92.605           | 18th       | 92.866           |
-| 19th       | 91.568           | 20         | 93.009           |
-| 21st       | 93.389           | 22nd       | 93.199           |
-| 23rd       | 93.436           | 24th       | 93.515           |
-| 25th       | 93.793           |            |                  |
+| 1st        | 71.020           | 2nd        | 80.839           |
+| 3rd        | 86.576           | 4th        | 86.469           |
+| 5th        | 89.138           | 6th        | 90.680           |
+| 7th        | 91.270           | 8th        | 92.449           |
+| 9th        | 92.426           | 10th       | 93.424           |
+| 11th       | 93.832           | 12th       | 93.379           |
+| 13th       | 93.469           | 14th       | 94.490           |
+| 15th       | 93.628           | 16th       | 94.376           |
+| 17th       | 93.129           | 18th       | 94.535           |
+| 19th       | 94.376           | 20         | 95.215           |
+| 21st       | 94.921           | 22nd       | 94.671           |
+| 23rd       | 94.649           | 24th       | 94.581           |
+| 25th       | 94.172           |            |                  |
 
  
 
@@ -312,7 +359,7 @@ data.
 
  
 
-### **Test a Model on New Images**
+### **Test a Model on New Images:**
 
 To give myself more insight into how your model is working, I downloaded several
 images from the internet of traffic signs and tested the accuracy of the
@@ -324,18 +371,51 @@ pre-trained network.
 
  
 
+**Discussion​ on New Test Data:**
+
+ 
+
+**Image 1:**
+
+It is Left Turn sign and the network classifies correctly. \<br /\>
+
+ 
+
+**Image 2:**
+
+It is a Bicycle Crossing sign but it is slightly modified from the sign the
+network was trained on. The network confuses it with the Right-of-way sign.
+
+ 
+
+**Image 3:**
+
+It is Ahead Only sign and the network classifies correctly.
+
+ 
+
+**Image 4:**
+
+It is a Traffic Signal sign. The network confuses it with the Pedastrian sign.
+
+ 
+
+**Image 5:**
+
+It is a Slippery Road sign. The network confuses it with the Stop sign. The
+reason might be that in train data the Slippery Road sign has car inclined in it
+while the test image has car horizontal it.
+
+ 
+
+**Image 6, 7, 8:**
+
+These are Priority road, Turn Right Ahead and Yeild signs respectively. The
+network classifies correclty.
+
+ 
+
 **Predictions on New Test Data:**
-
-![](documentation/output_65_1.png)
-
-| **Predictions**       | **Confidence (%)** |
-|-----------------------|--------------------|
-| Roundabout mandatory  | 100.000            |
-| Speed limit (70km/h)  | 0.000              |
-| Speed limit (50km/h)  | 0.000              |
-| Speed limit (120km/h) | 0.000              |
-| Speed limit (80km/h)  | 0.000              |
-| **Ground Truth**      | **No Vehicle**     |
 
 ![](documentation/output_65_3.png)
 
@@ -359,17 +439,6 @@ pre-trained network.
 | Right-of-way at the next intersection | 0.150                |
 | **Ground Truth**                      | **Bicycle crossing** |
 
-![](documentation/output_65_7.png)
-
-| **Predictions**                                    | **Confidence (%)**       |
-|----------------------------------------------------|--------------------------|
-| Roundabout mandatory                               | 84.611                   |
-| Priority road                                      | 8.660                    |
-| End of no passing by vehicles over 3.5 metric tons | 3.120                    |
-| End of no passing by vehicles over 3.5 metric ton  | 2.012                    |
-| Speed limit (100km/h)                              | 0.713                    |
-| **Ground Truth**                                   | **Roundabout mandatory** |
-
 ![](documentation/output_65_9.png)
 
 | **Predictions**      | **Confidence (%)** |
@@ -392,50 +461,6 @@ pre-trained network.
 | General caution           | 0.052               |
 | **Ground Truth**          | **Traffic Signals** |
 
-![](documentation/output_65_13.png)
-
-| **Predictions**                       | **Confidence (%)**  |
-|---------------------------------------|---------------------|
-| Beware of ice/snow                    | 56.233              |
-| Right-of-way at the next intersection | 27.989              |
-| Double curve                          | 7.642               |
-| Traffic signals                       | 2.601               |
-| Children crossing                     | 1.434               |
-| **Ground Truth**                      | **Traffic Signals** |
-
-![](documentation/output_65_15.png)
-
-| **Predictions**  | **Confidence (%)**       |
-|------------------|--------------------------|
-| Yield            | 71.145                   |
-| No vehicles      | 9.539                    |
-| Stop             | 6.892                    |
-| Priority road    | 3.922                    |
-| Road work        | 1.760                    |
-| **Ground Truth** | **Roundabout mandatory** |
-
-![](documentation/output_65_17.png)
-
-| **Predictions**                       | **Confidence (%)**  |
-|---------------------------------------|---------------------|
-| General caution                       | 54.849              |
-| Traffic signals                       | 45.148              |
-| Pedestrians                           | 0.003               |
-| Right-of-way at the next intersection | 0.000               |
-| Road narrows on the right             | 0.000               |
-| **Ground Truth**                      | **Traffic signals** |
-
-![](documentation/output_65_19.png)
-
-| **Prediction**            | **Confidence (%)**  |
-|---------------------------|---------------------|
-| Traffic signals           | 95.580              |
-| General caution           | 4.420               |
-| Road narrows on the right | 0.000               |
-| Pedestrians               | 0.000               |
-| Road work                 | 0.000               |
-| **Ground Truth**          | **Traffic signals** |
-
 ![](documentation/output_65_21.png)
 
 | **Prediction**       | **Confidence (%)** |
@@ -446,28 +471,6 @@ pre-trained network.
 | Roundabout mandatory | 0.000              |
 | Speed limit (70km/h) | 0.000              |
 | **Ground Truth**     | **Slippery road**  |
-
-![](documentation/output_65_23.png)
-
-| **Prediction**            | **Confidence (%)**  |
-|---------------------------|---------------------|
-| General caution           | 99.994              |
-| Traffic signals           | 0.006               |
-| Pedestrians               | 0.000               |
-| Bumpy road                | 0.000               |
-| Road narrows on the right | 0.000               |
-| **Ground Truth**          | **Traffic signals** |
-
-![](documentation/output_65_25.png)
-
-| **Predictions**                              | **Confidence (%)** |
-|----------------------------------------------|--------------------|
-| No passing                                   | 78.461             |
-| Keep left                                    | 9.933              |
-| Yield                                        | 8.010              |
-| No passing for vehicles over 3.5 metric tons | 0.935              |
-| Speed limit (60km/h)                         | 0.751              |
-| **Ground Truth**                             | **Two Symbols**    |
 
 ![](documentation/output_65_27.png)
 
@@ -492,17 +495,6 @@ pre-trained network.
 | **Ground Truth**     | **Go straight or right** |
 
 ![](documentation/output_65_31.png)
-
-| Predictions          | **Confidence (%)** |
-|----------------------|--------------------|
-| Yield                | 100.000            |
-| Speed limit (20km/h) | 0.000              |
-| Speed limit (30km/h) | 0.000              |
-| Speed limit (50km/h) | 0.000              |
-| Speed limit (60km/h) | 0.000              |
-| **Ground Truth**     | **Yield**          |
-
-![](documentation/output_65_33.png)
 
 | **Predictions**                                    | **Confidence (%)**       |
 |----------------------------------------------------|--------------------------|
