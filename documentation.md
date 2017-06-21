@@ -261,27 +261,25 @@ Then I made tweak the architecture a little further by:
 *Note: When Dropout technique is used, the dropped out neurons do not contribute
 in forward and backward pass.*
 
-
-
 My architecture is slightly modified from the above mentioned reference
 architecture and is as follows: 
 
 | **Layer**   | **Description** | **Filter Weight** | **Filter Bias** | **Stride** | **Padding** | **Dropout** | **Dimension**        | **Parameter** |
 |-------------|-----------------|-------------------|-----------------|------------|-------------|-------------|----------------------|---------------|
-| **Layer 1** | Convolutional   | 5x5x6             | 6               | 2x2        | Valid       | 1.0         | Input: 32x32x3       | 156           |
+| **Layer 1** | Convolutional   | 5x5x6             | 6               | 2x2        | Valid       | 1.0         | Input: 32x32x3       | 456           |
 |             |                 |                   |                 |            |             |             | ReLU: 28x28x6        |               |
 |             |                 |                   |                 |            |             |             | Max Pooling: 14x14x6 |               |
 | **Layer 2** | Convolutional   | 5x5x16            | 16              | 2x2        | Valid       | 1.0         | Input: 14x14x6       | 2416          |
 |             |                 |                   |                 |            |             |             | ReLU: 10x10x16       |               |
 |             |                 |                   |                 |            |             |             | Max Pooling: 5x5x16  |               |
-| **Layer 3** | Convolutional   | 5x5x400           | 400             | 2x2        | Valid       | 1.0         | Input: 5x5x16        |               |
+| **Layer 3** | Convolutional   | 5x5x400           | 400             | 2x2        | Valid       | 1.0         | Input: 5x5x16        | 160400        |
 |             |                 |                   |                 |            |             |             | ReLU: 1x1x400        |               |
 | **Flatten** |                 |                   |                 |            |             |             | 400                  |               |
 | **Layer 4** | Fully Connected | 400x120           | 120             |            |             | 0.6         | Input: 400           | 48120         |
 |             |                 |                   |                 |            |             |             | ReLU: 120            |               |
-| **Layer 5** | Fully Connected | 120x84            | 84              |            |             | 0.5         | Input: 120           | 10164         |
+| **Layer 5** | Fully Connected | 120x84            | 84              |            |             | 0.5         | Input: 120           | 14520         |
 |             |                 |                   |                 |            |             |             | ReLU: 84             |               |
-| **Layer 6** | Output          | 84x43             | 43              |            |             |             | Input: 84            | 3655          |
+| **Layer 6** | Output          | 84x43             | 43              |            |             |             | Input: 84            | 7140          |
 |             |                 |                   |                 |            |             |             | Logits: 84           |               |
 
  
