@@ -227,12 +227,8 @@ I primarily used OpenCV for image transformations.
 
 Now, I implemented the multi-layer Convolutional Neural Network architecture. 
 
- 
-
 The starting point was the LeNet Architecture which consists of Convolution
 Layers followed by Fully Connected layers:
-
- 
 
 ![](documentation/lenet.png)
 
@@ -255,8 +251,6 @@ Then I made tweak the architecture a little further by:
     overfit by randomly dropping the few units so that the network can never
     rely on any given activation. Dropout helps network to learn redundant
     representation of everything to make sure some of the information retain.
-
- 
 
 *Note: When Dropout technique is used, the dropped out neurons do not contribute
 in forward and backward pass.*
@@ -312,14 +306,10 @@ the LeNet Architecture. For implementation details of each layer, please have a
 look to the [Github
 repo.](https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project)
 
- 
-
 When training a network on not-so-powerful computers, it is important to apply
 Mini-batching so that the network can be trained with small chunks of the
 training data at a time without overloading the memory of the machine. I wrote
 following code for mini-batching:
-
- 
 
 Now, for actual training of the network, we need to create a session of
 TensorFlow and optimize the parameters. My results for the Validation sets are:
@@ -346,7 +336,6 @@ TensorFlow and optimize the parameters. My results for the Validation sets are:
 
 Now comes the part where we test the accuracy of the network on the hidden test
 data.
-
  
 
 **The network is able to achieve 95.306% accuracy on the test data.**
@@ -355,7 +344,6 @@ data.
 |---------------|---------|
 
 
- 
 
 ### **Test a Model on New Images:**
 
