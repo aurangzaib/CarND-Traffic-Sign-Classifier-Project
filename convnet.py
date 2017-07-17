@@ -1,3 +1,6 @@
+"""
+DeConv or Probing --> to find the output or activation of each neural network layer
+"""
 hyper_params = {
     "mu": 0,
     "stddev": 0.1,
@@ -18,6 +21,7 @@ def get_weights_biases(mu, sd, input_channels, output_channels):
             Wf = W - Wo*Ws + 1
             Df = K
     """
+
     w = {
         'c1': tf.Variable(tf.truncated_normal([5, 5, input_channels, 6], mean=mu, stddev=sd)),
         'c2': tf.Variable(tf.truncated_normal([5, 5, 6, 16], mean=mu, stddev=sd)),
@@ -51,6 +55,11 @@ def convolution_layer(x, w, b, st, padding, pool_k, pool_st, dropout, apply_pool
         max pooling causes information loss
         """
         conv = tf.nn.max_pool(conv, ksize=pool_k, strides=pool_st, padding=padding)
+    """
+    dropout makes half of the activation randomly 0 and the other half *2
+    it forces the network to learn redundant information and shouldn't rely
+    on any given activation -- reduces overfitting
+    """
     conv = tf.nn.dropout(conv, keep_prob=dropout)
     print("Conv - dropout: {}\n".format(conv.get_shape()))
     return conv
@@ -110,6 +119,18 @@ def n_parameters(layer1, layer2, layer3, layer4, layer5, layer6):
 
 
 def le_net(_x_, mu, stddev, dropouts, input_channels=1, output_channels=10):
+    """
+    in convnet, each layer increases the depth and reduces the width & height of the feature.
+
+    strides --> by how many pixels kernel is shifted each time
+    padding --> valid and same
+
+    relu      --> reactified linear unit --> activation functoin  --> non-linear
+    signmoid  --> activation functoin --> reactified linear unit --> non-linear
+    relu is much shorter training time than sigmoid
+
+    we use multiple layers to increases non-linearity which increases the learning capicity of the n/w
+    """
     from tensorflow.contrib.layers import flatten
     train_dropouts = {'c1': dropouts[0], 'c2': dropouts[1], 'c3': dropouts[2], 'fc1': dropouts[3], 'fc2': dropouts[4]}
     w, b = get_weights_biases(mu, stddev, input_channels, output_channels)
