@@ -45,6 +45,11 @@ def convolution_layer(x, w, b, st, padding, pool_k, pool_st, dropout, apply_pool
     conv = tf.nn.relu(conv)
     print("Conv - relu: {}".format(conv.get_shape()))
     if apply_pooling:
+        """
+        max pooling reduces total # of parameters and reduces overfitting
+        dropout is preferred over max pooling
+        max pooling causes information loss
+        """
         conv = tf.nn.max_pool(conv, ksize=pool_k, strides=pool_st, padding=padding)
     conv = tf.nn.dropout(conv, keep_prob=dropout)
     print("Conv - dropout: {}\n".format(conv.get_shape()))
@@ -71,6 +76,15 @@ def output_layer(fc, w, b):
 
 
 def n_parameters(layer1, layer2, layer3, layer4, layer5, layer6):
+    """
+     without parameter sharing:
+        num_params = (output)*(filter) + (output)*(bias)
+        for example  --> num_params = (14x14x20)*(8x8x3)  + (14z14x20)*(1)
+
+    with parameter sharing:
+        num_params = (output_depth)*(filter) + (output_depth)*(bias)
+        for example --> num_params = (20)*(8x8x3)  + (20)*(1)
+    """
     # parameter sharing is assumed
     dim = layer1.get_shape()[3]
     layer1_params = dim * (5 * 5 * 3) + dim * 1
