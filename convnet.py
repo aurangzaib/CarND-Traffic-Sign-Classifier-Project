@@ -84,7 +84,7 @@ def n_parameters(layer1, layer2, layer3, layer4, layer5, layer6):
     layer5_params = (dim * 120) + dim * 1
     dim = layer5.get_shape()[1]
     layer6_params = (dim * 84) + dim * 1
-    total_params = layer1_params + layer2_params + layer3_params + layer4_params + layer5_params + layer5_params
+    total_params = layer1_params + layer2_params + layer3_params + layer4_params + layer5_params + layer6_params
 
     print("Layer 1 Params: {}".format(layer1_params))
     print("Layer 2 Params: {}".format(layer2_params))
@@ -97,13 +97,7 @@ def n_parameters(layer1, layer2, layer3, layer4, layer5, layer6):
 
 def le_net(_x_, mu, stddev, dropouts, input_channels=1, output_channels=10):
     from tensorflow.contrib.layers import flatten
-    train_dropouts = {
-        'c1': dropouts[0],
-        'c2': dropouts[1],
-        'c3': dropouts[2],
-        'fc1': dropouts[3],
-        'fc2': dropouts[4],
-    }
+    train_dropouts = {'c1': dropouts[0], 'c2': dropouts[1], 'c3': dropouts[2], 'fc1': dropouts[3], 'fc2': dropouts[4]}
     w, b = get_weights_biases(mu, stddev, input_channels, output_channels)
     padding = 'VALID'
     k = 2
@@ -113,10 +107,11 @@ def le_net(_x_, mu, stddev, dropouts, input_channels=1, output_channels=10):
     # Layer 2 -- convolution layer:
     conv2 = convolution_layer(conv1, w['c2'], b['c2'], st, padding, pool_k, pool_st, train_dropouts['c2'])
     # Layer 3 -- convolution layer
-    conv3 = convolution_layer(conv2, w['c3'], b['c3'], st, padding, pool_k, pool_st, train_dropouts['c3'], apply_pooling=False)
+    conv3 = convolution_layer(conv2, w['c3'], b['c3'], st, padding, pool_k, pool_st, train_dropouts['c3'],
+                              apply_pooling=False)
     # Flatten
     fc1 = flatten(conv3)
-    print("Faltten: {}\n".format(fc1.get_shape()))
+    print("Flatten: {}\n".format(fc1.get_shape()))
     # Layer 3 -- fully connected layer:
     fc1 = full_connected_layer(fc1, w['fc1'], b['fc1'], train_dropouts['fc1'])
     # Layer 4 -- full connected layer:

@@ -1,9 +1,8 @@
 def classify_traffic_sign():
+    from visualization import train_test_examples, get_data_summary
     from helper import get_new_test_data, traffic_sign_name
     from helper import get_batches, load_data, pre_process
     from helper import augment_dataset, save_data
-    from visualization import train_test_examples
-    from visualization import get_data_summary
     from convnet import le_net, hyper_params
     from sklearn import model_selection
     from keras.datasets import cifar10
@@ -21,8 +20,8 @@ def classify_traffic_sign():
     load_traffic_data = True
     if load_traffic_data:
         x_train, y_train = load_data('train.p')
-        x_validation, y_validation = load_data('test.p')
-        x_test, y_test = load_data('valid.p')
+        x_validation, y_validation = load_data('valid.p')
+        x_test, y_test = load_data('test.p')
     else:
         (x_train, y_train), (x_test, y_test) = cifar10.load_data()
         # y_train.shape is 2d, (50000, 1). flatten the array.
@@ -42,7 +41,8 @@ def classify_traffic_sign():
         x_train, y_train = shuffle(x_train, y_train)
 
     # Dataset Summary & Exploration
-    input_h, input_channels, n_classes, n_samples = get_data_summary(x_train, y_train)
+    input_h, input_channels, n_classes, n_samples = get_data_summary(x_train,
+                                                                     y_train)
     train_test_examples(x_train, x_validation, x_test)
 
     # get augmented images using train datasets
@@ -62,7 +62,11 @@ def classify_traffic_sign():
 
     # placeholders
     # these will be initialized from the tensorflow session
-    x = tf.placeholder(tf.float32, [None, input_h,
+    # height and width are same, 32x32
+    # x --> image matrix
+    # y --> class number
+    x = tf.placeholder(tf.float32, [None,
+                                    input_h,
                                     input_h,
                                     input_channels])
     y = tf.placeholder(tf.int32, [None])
@@ -77,11 +81,14 @@ def classify_traffic_sign():
                     input_channels,
                     n_classes)
     soft_max_prb = tf.nn.softmax(logits=logits)
-    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=one_hot_y)
+    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits,
+                                                            labels=one_hot_y)
     cost = tf.reduce_mean(cross_entropy)  # loss operation
-    # using adam optimizer rather than stochastic grad descent [https://arxiv.org/pdf/1412.6980v7.pdf]
+    # using adam optimizer rather than stochastic grad descent
+    # [https://arxiv.org/pdf/1412.6980v7.pdf]
     optimizer = tf.train.AdamOptimizer(learning_rate=hyper_params['rate']).minimize(cost)
-    correct_prediction = tf.equal(tf.argmax(logits, axis=1), tf.argmax(one_hot_y, axis=1))
+    correct_prediction = tf.equal(tf.argmax(logits, axis=1),
+                                  tf.argmax(one_hot_y, axis=1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     # session
     init = tf.global_variables_initializer()
@@ -89,15 +96,15 @@ def classify_traffic_sign():
 
     # training, validation and testing
     retrain_model = True
-    no_improvement_count = 0
-    prev_accuracy = 0
-    current_accuracy = 0
     if retrain_model:
+        no_improvement_count = 0
+        prev_accuracy = 0
+        current_accuracy = 0
         with tf.Session() as sess:
             sess.run(init)
             print("Training....")
-            prev_accuracy = current_accuracy
             for e in range(hyper_params['epoch']):
+                prev_accuracy = current_accuracy
                 # training the network
                 x_train_p, y_train_p = shuffle(x_train_p, y_train_p)
                 batches = get_batches(hyper_params['batch_size'], x_train_p, y_train_p)
@@ -116,7 +123,7 @@ def classify_traffic_sign():
                 # early termination
                 current_accuracy = validation_accuracy
                 no_improvement_count = no_improvement_count + 1 if current_accuracy < prev_accuracy else 0
-                print("no imp count: {}".format(no_improvement_count))
+                print("no improv. count: {}".format(no_improvement_count))
                 if no_improvement_count > 3:
                     continue
             saver.save(sess, save_file)
@@ -143,8 +150,7 @@ def classify_traffic_sign():
             x_test_new_p, y_test_new_p = pre_process(x_test_new, y_test_new)
             saver.restore(sess, save_file)
             predicted_logits = sess.run(accuracy, feed_dict={
-                x: x_test_new_p,
-                y: y_test_new_p,
+                x: x_test_new_p, y: y_test_new_p,
                 dropouts: hyper_params['test_dropouts']
             })
             prediction_probabilities = sess.run(soft_max_prb, feed_dict={

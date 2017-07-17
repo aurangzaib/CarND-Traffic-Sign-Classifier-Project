@@ -15,16 +15,13 @@ x_test, y_test = load_data('test.p')
 
 model = Sequential()
 # Layer 1 -- convolution
-model.add(Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='valid', input_shape=(32, 32, 3)))
+model.add(Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='valid', input_shape=(32, 32, 3), activation='relu'))
 model.add(MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid'))
-model.add(Activation(activation='relu'))
-# Layer 2 -- convolution
-model.add(Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='valid'))
+# Layer 2 -- convolution    
+model.add(Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='valid', activation='relu'))
 model.add(MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid'))
-model.add(Activation(activation='relu'))
 # Layer 3 -- convolution
-model.add(Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='valid'))
-model.add(Activation(activation='relu'))
+model.add(Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='valid', activation='relu'))
 # flatten
 model.add(Flatten(input_shape=(32, 32, 3)))
 # Layer 4 -- fully connected layer
