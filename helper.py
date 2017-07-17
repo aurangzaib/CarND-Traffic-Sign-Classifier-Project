@@ -1,4 +1,7 @@
 def fetch_images_from_folder(folder, extension='*.png'):
+    """
+    fetch images from folder
+    """
     import cv2 as cv
     import os
     import fnmatch
@@ -16,10 +19,16 @@ def fetch_images_from_folder(folder, extension='*.png'):
 
 
 def get_classes_samples(index, labels):
+    """
+    get samples of a specific class
+    """
     return [i for i, _x_ in enumerate(labels) if _x_ == index]
 
 
 def get_new_test_data(folder):
+    """
+    load data gathered from internet
+    """
     import numpy as np
     features, file_names = fetch_images_from_folder(folder)
     labels = [15,  # no vehicle
@@ -46,24 +55,33 @@ def get_new_test_data(folder):
 
 
 def traffic_sign_name(_id_):
+    """
+    return only names of traffic signs
+    """
     from pandas.io.parsers import read_csv
     sign_name = read_csv('signnames.csv').values[_id_][1]
     return sign_name
 
 
-def get_batches(_batch_size_, features, labels):
+def get_batches(batch_size, features, labels):
+    """
+    get batches of features and labels from train data
+    """
     import math
     total_size, index, batch = len(features), 0, []
-    n_batches = int(math.ceil(total_size / _batch_size_)) if _batch_size_ > 0 else 0
+    n_batches = int(math.ceil(total_size / batch_size)) if batch_size > 0 else 0
     for _i_ in range(n_batches - 1):
-        batch.append([features[index:index + _batch_size_],
-                      labels[index:index + _batch_size_]])
-        index += _batch_size_
+        batch.append([features[index:index + batch_size],
+                      labels[index:index + batch_size]])
+        index += batch_size
     batch.append([features[index:], labels[index:]])
     return batch
 
 
 def load_data(filename):
+    """
+    load pickle files for train, validation and test
+    """
     import pickle
     import os
     root = os.getcwd() + '/traffic-signs-data/'
@@ -74,6 +92,9 @@ def load_data(filename):
 
 
 def save_data(filename, features, labels):
+    """
+    save augmented features as a pickle file
+    """
     import pickle
     root = 'traffic-signs-data/'
     assert (len(features) == len(labels))
@@ -86,6 +107,9 @@ def save_data(filename, features, labels):
 
 
 def grayscale(x):
+    """
+    images in grayscale
+    """
     import cv2 as cv
     import numpy as np
     for index, image in enumerate(x):
@@ -97,6 +121,9 @@ def grayscale(x):
 
 
 def normalizer(x):
+    """
+    normalizer to reduce mean and stddev to 0
+    """
     import numpy as np
     x_min = float(np.min(x))
     x_max = float(np.max(x))
@@ -105,6 +132,9 @@ def normalizer(x):
 
 
 def pre_process(features, labels, is_train=False):
+    """
+    grayscale, normalize & shuffle
+    """
     from sklearn.utils import shuffle
     assert (len(features) == len(labels))
     features = grayscale(features)
@@ -127,6 +157,9 @@ def visualize_augmented_features(features, images_in_row=1):
 
 
 def perform_rotation(image, cols, rows):
+    """
+    perform angular transformation
+    """
     from random import randint
     import cv2
     center = (int(cols / 2), int(cols / 2))
@@ -137,6 +170,9 @@ def perform_rotation(image, cols, rows):
 
 
 def perform_translation(image, cols, rows, value):
+    """
+    perform lateral transformation
+    """
     import cv2
     import numpy as np
     transformer = np.float32([[1, 0, value], [0, 1, value]])
@@ -145,6 +181,9 @@ def perform_translation(image, cols, rows, value):
 
 
 def perform_transformation(feature, label):
+    """
+    rotate and translate images
+    """
     from random import randint
     transform_level = 10
     rows, cols, channels = feature.shape
@@ -154,23 +193,20 @@ def perform_transformation(feature, label):
     return image, label
 
 
-def augment_dataset(features, labels, n_classes):
+def augment_dataset(features, labels, n_classes, transforms_per_image=20, iterations=100):
     from random import randint
     from sklearn.utils import shuffle
     import numpy as np
-    transforms_per_image = 20
-    iterations = 100
     augmented_features, augmented_labels = [], []
     for _i_ in range(iterations):
         for i in range(transforms_per_image):
             # get a random class from 0 to 42
             random_class = randint(0, n_classes)
-            # select 10 features and labels of that class
-            selected_index = get_classes_samples(random_class, labels)[random_class:random_class + 1]
-            # print("index: ", selected_index)
-            selected_labels = labels[selected_index]
+            # select 2 features and labels of that class
+            selected_indices = get_classes_samples(random_class, labels)[random_class:random_class + 1]
+            selected_labels = labels[selected_indices]
             # perform transformation in each of the features
-            for index, transform_y in zip(selected_index, selected_labels):
+            for index, transform_y in zip(selected_indices, selected_labels):
                 # get rows and cols of the image
                 transform_x = features[index]
                 rows, cols, channels = transform_x.shape
@@ -178,10 +214,12 @@ def augment_dataset(features, labels, n_classes):
                 for value in range(-int(rows), int(rows), 4):
                     # perform transformations on the image
                     aug_x, aug_y = perform_transformation(transform_x, transform_y)
+                    # save in vector
                     augmented_features.append(aug_x)
                     augmented_labels.append(aug_y)
     # append the results of transformations
     augmented_features, augmented_labels = shuffle(augmented_features, augmented_labels)
+    # to numpy array
     augmented_features = np.array(augmented_features)
     # assertion
     assert (len(augmented_features) == len(augmented_labels))

@@ -44,7 +44,7 @@ for each class.
 
  
 
-#### **2. Include an exploratory visualization of the dataset:**
+#### **2. Exploratory visualization of the dataset:**
 
 Now we will visualize the dataset, what are the features available and how the
 labels are distributed in the dataset:
@@ -159,7 +159,7 @@ for now let's enjoy the histogram after the data augmentation.
 
 ### **Pre-process the Data Set:**
 
-Preprocessing is an important step before training neural network. It consists
+Pre-processing is an important step before training neural network. It consists
 of:
 
 -   Grayscale the images.
@@ -242,9 +242,9 @@ Traffic Sign Recognition. 
 
  
 
-Then I made tweak the architecture a little further by:
+Then I tweaked the architecture further as follows:
 
--   Using 3 Convolution layers instead of 2 layers.
+-   Using 3 Convolution layers.
 
 -   Using Dropouts after the Fully Connected layers. Dropout was proposed by
     [Geoffrey Hinton et al](https://goo.gl/Y7QH0b). It is a technique to reduce
@@ -308,8 +308,7 @@ repo.](https://github.com/aurangzaib/CarND-Traffic-Sign-Classifier-Project)
 
 When training a network on not-so-powerful computers, it is important to apply
 Mini-batching so that the network can be trained with small chunks of the
-training data at a time without overloading the memory of the machine. I wrote
-following code for mini-batching:
+training data at a time without overloading the memory of the machine.
 
 Now, for actual training of the network, we need to create a session of
 TensorFlow and optimize the parameters. My results for the Validation sets are:
@@ -347,7 +346,7 @@ data.
 
 ### **Test a Model on New Images:**
 
-To give myself more insight into how your model is working, I downloaded several
+To give myself more insight into how my model is working, I downloaded several
 images from the internet of traffic signs and tested the accuracy of the
 pre-trained network.
 
@@ -361,43 +360,31 @@ pre-trained network.
 
  
 
-**Image 1:**
-
-It is Left Turn sign and the network classifies correctly. \<br /\>
+**Image 1:** It is Left Turn sign and the network classifies correctly. \<br /\>
 
  
 
-**Image 2:**
-
-It is a Bicycle Crossing sign but it is slightly modified from the sign the
+**Image 2:** It is a Bicycle Crossing sign but it is slightly modified from the sign the
 network was trained on. The network confuses it with the Right-of-way sign.
 
  
 
-**Image 3:**
-
-It is Ahead Only sign and the network classifies correctly.
+**Image 3:** It is Ahead Only sign and the network classifies correctly.
 
  
 
-**Image 4:**
-
-It is a Traffic Signal sign. The network confuses it with the Pedastrian sign.
+**Image 4:** It is a Traffic Signal sign. The network confuses it with the Pedastrian sign.
 
  
 
-**Image 5:**
-
-It is a Slippery Road sign. The network confuses it with the Stop sign. The
+**Image 5:** It is a Slippery Road sign. The network confuses it with the Stop sign. The
 reason might be that in train data the Slippery Road sign has car inclined in it
 while the test image has car horizontal it.
 
  
 
-**Image 6, 7, 8:**
-
-These are Priority road, Turn Right Ahead and Yeild signs respectively. The
-network classifies correclty.
+**Image 6, 7, 8:** These are Priority road, Turn Right Ahead and Yeild signs respectively. The
+network classifies correctly.
 
  
 

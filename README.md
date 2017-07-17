@@ -423,7 +423,7 @@ Traffic Sign Recognition. 
 
 Then I made tweak the architecture a little further by:
 
--   Using 3 Convolution layers instead of 2 layers.
+-   Using 3 Convolution layers.
 
 -   Using Dropouts after the Fully Connected layers. Dropout was proposed by
     [Geoffrey Hinton et al](https://goo.gl/Y7QH0b). It is a technique to reduce
@@ -543,21 +543,6 @@ The hyper parameters are as follows:
 | Test Dropouts      | 1.0          |
 
  
-When training a network on not-so-powerful computers, it is important to apply Mini-batching so that the network can be trained with small chunks of the training data at a time without overloading the memory of the machine. I wrote following code for mini-batching:
-
-```python
-def get_batches(_batch_size_, _features_, _labels_):
-    import math
-    total_size, index, batch = len(_features_), 0, []
-    n_batches = int(math.ceil(total_size / _batch_size_)) if _batch_size_ > 0 else 0
-    for _i_ in range(n_batches - 1):
-        batch.append([_features_[index:index + _batch_size_],
-                      _labels_[index:index + _batch_size_]])
-        index += _batch_size_
-    batch.append([_features_[index:], _labels_[index:]])
-    return batch
-```
-
 Now we will train the classifier.
 
  
@@ -574,6 +559,19 @@ When training a network on not-so-powerful computers, it is important to apply
 Mini-batching so that the network can be trained with small chunks of the
 training data at a time without overloading the memory of the machine. I wrote
 following code for mini-batching:
+
+```python
+def get_batches(_batch_size_, _features_, _labels_):
+    import math
+    total_size, index, batch = len(_features_), 0, []
+    n_batches = int(math.ceil(total_size / _batch_size_)) if _batch_size_ > 0 else 0
+    for _i_ in range(n_batches - 1):
+        batch.append([_features_[index:index + _batch_size_],
+                      _labels_[index:index + _batch_size_]])
+        index += _batch_size_
+    batch.append([_features_[index:], _labels_[index:]])
+    return batch
+```
 
  
 
@@ -627,7 +625,7 @@ if test_data:
 
 ### **Test a Model on New Images:**
 
-To give myself more insight into how your model is working, I downloaded several
+To give myself more insight into how my model is working, I downloaded several
 images from the internet of traffic signs and tested the accuracy of the
 pre-trained network.
 
@@ -641,43 +639,31 @@ pre-trained network.
 
  
 
-**Image 1:**
-
-It is Left Turn sign and the network classifies correctly. \<br /\>
+**Image 1:** It is Left Turn sign and the network classifies correctly. \<br /\>
 
  
 
-**Image 2:**
-
-It is a Bicycle Crossing sign but it is slightly modified from the sign the
+**Image 2:** It is a Bicycle Crossing sign but it is slightly modified from the sign the
 network was trained on. The network confuses it with the Right-of-way sign.
 
  
 
-**Image 3:**
-
-It is Ahead Only sign and the network classifies correctly.
+**Image 3:** It is Ahead Only sign and the network classifies correctly.
 
  
 
-**Image 4:**
-
-It is a Traffic Signal sign. The network confuses it with the Pedastrian sign.
+**Image 4:** It is a Traffic Signal sign. The network confuses it with the Pedastrian sign.
 
  
 
-**Image 5:**
-
-It is a Slippery Road sign. The network confuses it with the Stop sign. The
+**Image 5:** It is a Slippery Road sign. The network confuses it with the Stop sign. The
 reason might be that in train data the Slippery Road sign has car inclined in it
 while the test image has car horizontal it.
 
  
 
-**Image 6, 7, 8:**
-
-These are Priority road, Turn Right Ahead and Yeild signs respectively. The
-network classifies correclty.
+**Image 6, 7, 8:** These are Priority road, Turn Right Ahead and Yeild signs respectively. The
+network classifies correctly.
 
 ```python
 test_new_data = True

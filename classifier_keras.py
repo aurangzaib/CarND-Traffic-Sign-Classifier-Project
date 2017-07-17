@@ -1,5 +1,5 @@
-import tensorflow as tf
 from sklearn.preprocessing import LabelBinarizer
+import tensorflow as tf
 from helper import *
 import os
 
@@ -15,7 +15,8 @@ x_test, y_test = load_data('test.p')
 
 model = Sequential()
 # Layer 1 -- convolution
-model.add(Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='valid', input_shape=(32, 32, 3), activation='relu'))
+model.add(Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='valid', input_shape=(32, 32, 3),
+                 activation='relu'))
 model.add(MaxPool2D(pool_size=(2, 2), strides=(2, 2), padding='valid'))
 # Layer 2 -- convolution    
 model.add(Conv2D(filters=32, kernel_size=(5, 5), strides=(1, 1), padding='valid', activation='relu'))
@@ -35,20 +36,17 @@ model.add(Dropout(rate=0.5))
 # Layer 6 -- output layer
 model.add(Dense(units=43))
 model.add(Activation(activation='softmax'))
-
+# training
 x_train, y_train = pre_process(x_train, y_train)
 binarizer = LabelBinarizer()
 y_train_one_hot = binarizer.fit_transform(y_train)
-
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-# training
 model.fit(x=x_train, y=y_train_one_hot, batch_size=128,
           epochs=3, validation_split=0.3, shuffle=True, verbose=0)
-
+# testing
 x_test, y_test = pre_process(x_test, y_test)
 binarizer = LabelBinarizer()
 y_test_one_hot = binarizer.fit_transform(y_test)
-# testing
 metrics = model.evaluate(x=x_test, y=y_test_one_hot, verbose=0)
 for metrics_index, metrics_name in enumerate(model.metrics_names):
     name = metrics_name
