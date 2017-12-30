@@ -5,24 +5,24 @@ def fetch_images_from_folder(folder, extension='*.png'):
     import cv2 as cv
     import os
     import fnmatch
-    _images, _file_names = [], []
+    images, files = [], []
     _cwd_ = os.getcwd()
     print(_cwd_ + folder)
     for root, dir_names, file_names in os.walk(_cwd_ + folder):
         for filename in fnmatch.filter(file_names, extension):
             img = cv.imread(os.path.join(_cwd_ + folder, os.path.join(root, filename)))
             if img is not None:
-                _images.append(img)
+                images.append(img)
+                files.append(filename)
                 label = filename.split('/')[-1].split('-')[0]
-                _file_names.append(filename)
-    return _images, _file_names
+    return images, files
 
 
 def get_classes_samples(index, labels):
     """
     get samples of a specific class
     """
-    return [i for i, _x_ in enumerate(labels) if _x_ == index]
+    return [i for i, x in enumerate(labels) if x == index]
 
 
 def get_new_test_data(folder):
@@ -49,6 +49,7 @@ def get_new_test_data(folder):
               13,  # Yield
               40  # Roundabout mandatory
               ]
+
     print("features length: {}, labels length: {}".format(len(features), len(labels)))
     assert (len(features) == len(labels))
     return np.array(features), labels, file_names
@@ -70,9 +71,8 @@ def get_batches(batch_size, features, labels):
     import math
     total_size, index, batch = len(features), 0, []
     n_batches = int(math.ceil(total_size / batch_size)) if batch_size > 0 else 0
-    for _i_ in range(n_batches - 1):
-        batch.append([features[index:index + batch_size],
-                      labels[index:index + batch_size]])
+    for _ in range(n_batches - 1):
+        batch.append([features[index:index + batch_size], labels[index:index + batch_size]])
         index += batch_size
     batch.append([features[index:], labels[index:]])
     return batch

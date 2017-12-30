@@ -16,6 +16,9 @@ def get_weights_biases(mu, sd, input_channels, output_channels):
     print("Output channel: {}\n".format(output_channels))
     import tensorflow as tf
     """
+    weight = (height, width, input_depth, output_depth)
+    bias = (output_depth)
+    
     tensorflow filter size formula for valid padding:
             Hf = H - Ho*Hs + 1
             Wf = W - Wo*Ws + 1
@@ -86,27 +89,35 @@ def output_layer(fc, w, b):
 
 def n_parameters(layer1, layer2, layer3, layer4, layer5, layer6):
     """
-     without parameter sharing:
+    without parameter sharing:
         num_params = (output)*(filter) + (output)*(bias)
-        for example  --> num_params = (14x14x20)*(8x8x3)  + (14z14x20)*(1)
+        for example --> num_params = (14x14x20)*(8x8x3)  + (14x14x20)*(1)
 
     with parameter sharing:
         num_params = (output_depth)*(filter) + (output_depth)*(bias)
         for example --> num_params = (20)*(8x8x3)  + (20)*(1)
+
+    Here parameter sharing is assumed
     """
-    # parameter sharing is assumed
-    dim = layer1.get_shape()[3]
-    layer1_params = dim * (5 * 5 * 3) + dim * 1
-    dim = layer2.get_shape()[3]
-    layer2_params = dim * (5 * 5 * 6) + dim * 1
-    dim = layer3.get_shape()[3]
-    layer3_params = dim * (5 * 5 * 16) + dim * 1
-    dim = layer4.get_shape()[1]
-    layer4_params = (dim * 400) + dim * 1
-    dim = layer4.get_shape()[1]
-    layer5_params = (dim * 120) + dim * 1
-    dim = layer5.get_shape()[1]
-    layer6_params = (dim * 84) + dim * 1
+
+    dim, filter_dim = layer1.get_shape()[3], (5 * 5 * 3)
+    layer1_params = dim * filter_dim + dim * 1
+
+    dim, filter_dim = layer2.get_shape()[3], (5 * 5 * 6)
+    layer2_params = dim * filter_dim + dim * 1
+
+    dim, filter_dim = layer3.get_shape()[3], (5 * 5 * 16)
+    layer3_params = dim * filter_dim + dim * 1
+
+    dim, filter_dim = layer4.get_shape()[1], 400
+    layer4_params = dim * filter_dim + dim * 1
+
+    dim, filter_dim = layer4.get_shape()[1], 120
+    layer5_params = dim * filter_dim + dim * 1
+
+    dim, filter_dim = layer5.get_shape()[1], 84
+    layer6_params = dim * filter_dim + dim * 1
+
     total_params = layer1_params + layer2_params + layer3_params + layer4_params + layer5_params + layer6_params
 
     print("Layer 1 Params: {}".format(layer1_params))
@@ -125,11 +136,12 @@ def le_net(_x_, mu, stddev, dropouts, input_channels=1, output_channels=10):
     strides --> by how many pixels kernel is shifted each time
     padding --> valid and same
 
-    relu      --> reactified linear unit --> activation functoin  --> non-linear
-    signmoid  --> activation functoin --> reactified linear unit --> non-linear
-    relu is much shorter training time than sigmoid
+    relu     --> rectified linear unit --> activation function  --> non-linear
+    sigmoid  --> activation function --> non-linear
+    relu has much shorter training time than sigmoid
 
-    we use multiple layers to increases non-linearity which increases the learning capicity of the n/w
+    we use multiple layers to increase non-linearity
+    which increases the learning capacity of the n/w
     """
     from tensorflow.contrib.layers import flatten
     train_dropouts = {'c1': dropouts[0], 'c2': dropouts[1], 'c3': dropouts[2], 'fc1': dropouts[3], 'fc2': dropouts[4]}
@@ -142,11 +154,9 @@ def le_net(_x_, mu, stddev, dropouts, input_channels=1, output_channels=10):
     # Layer 2 -- convolution layer:
     conv2 = convolution_layer(conv1, w['c2'], b['c2'], st, padding, pool_k, pool_st, train_dropouts['c2'])
     # Layer 3 -- convolution layer
-    conv3 = convolution_layer(conv2, w['c3'], b['c3'], st, padding, pool_k, pool_st, train_dropouts['c3'],
-                              apply_pooling=False)
+    conv3 = convolution_layer(conv2, w['c3'], b['c3'], st, padding, pool_k, pool_st, train_dropouts['c3'], False)
     # Flatten
     fc1 = flatten(conv3)
-    print("Flatten: {}\n".format(fc1.get_shape()))
     # Layer 3 -- fully connected layer:
     fc1 = full_connected_layer(fc1, w['fc1'], b['fc1'], train_dropouts['fc1'])
     # Layer 4 -- full connected layer:

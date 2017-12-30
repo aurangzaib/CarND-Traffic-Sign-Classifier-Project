@@ -31,9 +31,9 @@ def iterate_data(index, x, y, high_range, steps):
     import matplotlib.pyplot as plt
     # % matplotlib inline
     images = get_classes_samples(index, y)
-    _images_ = images[:high_range:steps] if len(images) > 100 else images
+    selected_images = images[:high_range:steps] if len(images) > 100 else images
     fig, axes = plt.subplots(1, int(high_range / steps), figsize=(15, 15))
-    for _index, image_index in enumerate(_images_):
+    for _index, image_index in enumerate(selected_images):
         image = x[image_index].squeeze()
         axes[_index].imshow(image)
     plt.show()
@@ -44,10 +44,10 @@ def loopover_data(index, x, y, high_range, steps):
     from helper import get_classes_samples
     # % matplotlib inline
     images = get_classes_samples(index, y)
-    _images_ = images[:high_range:steps] if len(images) > 100 else images
-    imgaes_in_row = int(high_range / steps)
-    fig, axes = plt.subplots(1, imgaes_in_row, figsize=(15, 15))
-    for _index, image_index in enumerate(_images_):
+    selected_images = images[:high_range:steps] if len(images) > 100 else images
+    images_in_row = int(high_range / steps)
+    fig, axes = plt.subplots(1, images_in_row, figsize=(15, 15))
+    for _index, image_index in enumerate(selected_images):
         image = x[image_index].squeeze()
         axes[_index].imshow(image)
     plt.show()

@@ -14,7 +14,7 @@ def classify_traffic_sign():
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     # remove previous tensors and operations
     tf.reset_default_graph()
-    save_file = './model/lenet'
+    save_file = os.getcwd() + '/model/lenet'
     augmented_file = 'transforms.p'
     # load data
     load_traffic_data = True
@@ -34,7 +34,7 @@ def classify_traffic_sign():
 
     # merge train and augmented datasets
     # should be True except when debugging
-    expand_train_data = True
+    expand_train_data = False
     if expand_train_data:
         x_train = np.append(x_train, x_augmented, axis=0)
         y_train = np.append(y_train, y_augmented)
@@ -46,9 +46,9 @@ def classify_traffic_sign():
     train_test_examples(x_train, x_validation, x_test)
 
     # get augmented images using train datasets
-    # not required every time
     # pickle file is saved which can be loaded without performing...
     # ... augmentation every time
+    # should be False normally
     perform_augmentation = False
     if perform_augmentation:
         x_augmented, y_augmented = augment_dataset(x_train, y_train, n_classes)
@@ -95,7 +95,7 @@ def classify_traffic_sign():
     saver = tf.train.Saver()
 
     # training, validation and testing
-    retrain_model = True
+    retrain_model = False
     if retrain_model:
         no_improvement_count = 0
         prev_accuracy = 0

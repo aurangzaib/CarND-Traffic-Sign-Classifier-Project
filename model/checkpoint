@@ -1,2 +1,2 @@
-model_checkpoint_path: "lenet"
-all_model_checkpoint_paths: "lenet"
+model_checkpoint_path: "/Users/siddiqui/Documents/Projects/self-drive/02_traffic_sign_classifier/model/lenet"
+all_model_checkpoint_paths: "/Users/siddiqui/Documents/Projects/self-drive/02_traffic_sign_classifier/model/lenet"

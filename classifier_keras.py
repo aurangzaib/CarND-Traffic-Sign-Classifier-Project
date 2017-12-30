@@ -3,13 +3,27 @@ import tensorflow as tf
 from helper import *
 import os
 
-tf.python.control_flow_ops = tf
-from keras.layers.core import Activation, Dense, Dropout, Flatten
-from keras.layers import Conv2D, MaxPool2D
-from keras.models import Sequential
+# tf.python.control_flow_ops = tf
+# from keras.layers.core import Activation, Dense, Dropout, Flatten
+# from keras.layers import Conv2D, MaxPool2D
+# from keras.models import Sequential
+from helper import save_data
+# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
+""" create a pickle file """
+import numpy as np
+import cv2 as cv
+img1, img2 = cv.imread("PET-bottle.png"), cv.imread("Not-PET-bottle.png")
+features_ = np.array([img1, img2])
+labels_ = np.array([1, 2])
+save_data("pet-bottles.p", features_, labels_)
+f, l = load_data("pet-bottles.p")
+cv.imshow("img: ", f[0])
+cv.waitKey()
+print("label: ", labels_[0])
+
+"""
 x_train, y_train = load_data('transforms-train.p')
 x_test, y_test = load_data('test.p')
 
@@ -52,3 +66,4 @@ for metrics_index, metrics_name in enumerate(model.metrics_names):
     name = metrics_name
     value = metrics[metrics_index]
     print("{}: {}".format(name, value))
+"""
